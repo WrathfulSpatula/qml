@@ -1,0 +1,1004 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="../_static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../_static/favicon.ico">
+  
+
+
+  <meta property="og:title" content="Getting started with Amazon Braket Hybrid Jobs &#8212; PennyLane">
+  <meta property="og:url" content="https://pennylane.ai/qml/demos/getting_started_with_hybrid_jobs.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  
+  
+  
+  
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.14/css/mdb.min.css">
+  <!-- NanoScroller -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/css/nanoscroller.min.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/tomorrow-night.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       "HTML-CSS": { scale: 90, linebreaks: { automatic: true } },
+       TeX: {
+         Macros: {
+           pr : ['|\#1\\rangle\\langle\#1|',1],
+           ket: ['\\left| \#1\\right\\rangle',1],
+           bra: ['\\left\\langle \#1\\right|',1],
+           xket: ['\\left| \#1\\right\\rangle_x',1],
+           xbra: ['\\left\\langle \#1\\right|_x',1],
+           braket: ['\\langle \#1 \\rangle',1],
+           braketD: ['\\langle \#1 \\mid \#2 \\rangle',2],
+           braketT: ['\\langle \#1 \\mid \#2 \\mid \#3 \\rangle',3],
+           ketbra: ['| #1 \\rangle \\langle #2 |',2],
+           hc: ['\\text{h.c.}',0],
+           cc: ['\\text{c.c.}',0],
+           h: ['\\hat',0],
+           nn: ['\\nonumber',0],
+           di: ['\\frac{d}{d \#1}',1],
+           uu: ['\\mathcal{U}',0],
+           inn: ['\\text{in}',0],
+           out: ['\\text{out}',0],
+           vac: ['\\text{vac}',0],
+           I: ['\\hat{\\mathbf{1}}',0],
+           x: ['\\hat{x}',0],
+           p: ['\\hat{p}',0],
+           a: ['\\hat{a}',0],
+           ad: ['\\hat{a}^\\dagger',0],
+           n: ['\\hat{n}',0],
+           nbar: ['\\overline{n}',0],
+           sech: ['\\mathrm{sech~}',0],
+           tanh: ['\\mathrm{tanh~}',0],
+           re: ['\\text{Re}',0],
+           im: ['\\text{Im}',0],
+           tr: ['\\mathrm{Tr} #1',1],
+           sign: ['\\text{sign}',0],
+           overlr: ['\\overset\\leftrightarrow{\#1}',1],
+           overl: ['\\overset\leftarrow{\#1}',1],
+           overr: ['\\overset\rightarrow{\#1}',1],
+           avg: ['\\left< \#1 \\right>',1],
+           slashed: ['\\cancel{\#1}',1],
+           bold: ['\\boldsymbol{\#1}',1],
+           d: ['\\mathrm d',0],
+           expect: ["\\langle #1 \\rangle",1],
+           pde: ["\\frac{\\partial}{\\partial \#1}",1],
+           R: ["\\mathbb{R}",0],
+           C: ["\\mathbb{C}",0],
+           Ad: ["\\text{Ad}",0],
+           Var: ["\\text{Var}",0],
+           bx: ["\\mathbf{x}", 0],
+           bm: ["\\boldsymbol{\#1}",1],
+           haf: ["\\mathrm{haf}",0],
+           lhaf: ["\\mathrm{lhaf}",0]
+         }
+       }
+     });
+     </script>
+
+  <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130507810-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130507810-1');
+      </script>
+  
+    <title>Getting started with Amazon Braket Hybrid Jobs &#8212; PennyLane  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/xanadu.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/light-slider.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/hubs.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="canonical" href="https://pennylane.ai/qml/demos/getting_started_with_hybrid_jobs.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quantum machine learning" href="../demos_qml.html" />
+    <link rel="prev" title="Using PennyLane with IBM’s quantum devices and Qiskit" href="ibm_pennylane.html" /> 
+  </head><body><nav class="navbar navbar-expand-lg navbar-light white sticky-top">
+
+<!-- Logo and Title -->
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <a class="navbar-brand nav-link" href="https://pennylane.ai">
+    
+  <img class="pr-1" src=" ../_static/logo.png" width="28px"></img>
+  
+    <img id="navbar-wordmark" src="../_static/pennylane.svg"></img>
+  
+  </a>
+
+
+  <!-- [Mobile] Collapse Button -->
+  <div class="row right">
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <!-- [Mobile] Collapsible Content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+
+    <!-- Links on the Left -->
+    <ul class="navbar-nav mr-auto">
+      
+        
+          
+            <li class="nav-item active">
+              <a class="nav-link" href="https://pennylane.ai/qml/">
+                
+  
+    Learn
+  
+
+              </a>
+              <span class="sr-only">(current)</span>
+            </li>
+          
+
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/qml/demonstrations.html">
+                
+  
+    Demos
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/install.html">
+                
+  
+    Install
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/plugins.html">
+                
+  
+    Plugins
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://docs.pennylane.ai">
+                
+  
+    Documentation
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/blog/">
+                
+  
+    Blog
+  
+
+            </a>
+          </li>
+        
+      
+    </ul>
+
+    <!-- Links on the Right -->
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://pennylane.ai/faq.html">
+            <i class="fas fa-question pr-1"></i> FAQ
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://discuss.pennylane.ai/">
+            <i class="fab fa-discourse pr-1"></i> Support
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/PennyLaneAI/pennylane">
+            <i class="fab fa-github pr-1"></i> GitHub
+          </a>
+        </li>
+      
+
+    </ul>
+  </div>
+
+</nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../demos_qml.html" title="Quantum machine learning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ibm_pennylane.html" title="Using PennyLane with IBM’s quantum devices and Qiskit"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_getting-started.html" accesskey="U">Getting Started</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Getting started with Amazon Braket Hybrid Jobs</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+        <div id="content">
+          <div id="right-column">
+            
+            
+
+            <div class="document clearer body">
+              
+    <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-demos-getting-started-with-hybrid-jobs-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="getting-started-with-amazon-braket-hybrid-jobs">
+<span id="sphx-glr-demos-getting-started-with-hybrid-jobs-py"></span><h1>Getting started with Amazon Braket Hybrid Jobs<a class="headerlink" href="#getting-started-with-amazon-braket-hybrid-jobs" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial provides an introduction to running hybrid quantum-classical algorithms using
+PennyLane on <a class="reference external" href="https://aws.amazon.com/braket/">Amazon Braket</a>. With Amazon Braket, you gain access to both real quantum devices and
+scalable classical compute, enabling you to push the boundaries of your algorithm.</p>
+<p>In this tutorial, we’ll walk through how to create your first hybrid quantum-classical algorithms on AWS.
+With a single-line-of-code, we’ll see how to scale from PennyLane simulators on your laptop to running full-scale experiments on AWS that leverage both powerful classical compute and quantum devices.
+You’ll gain understanding of the hybrid jobs queue, including QPU priority queuing, and learn how to scale classical resources for resource-intensive tasks.
+We hope these tools will empower you to start experimenting today with hybrid quantum algorithms!</p>
+<div class="figure align-center">
+<a class="reference external image-reference" href="javascript:void(0);"><img alt="../_images/socialthumbnail_large_getting_started_with_hybrid_jobs.png" src="../_images/socialthumbnail_large_getting_started_with_hybrid_jobs.png" style="width: 65%;" /></a>
+</div>
+<div class="section" id="amazon-braket-hybrid-jobs">
+<h2>Amazon Braket Hybrid Jobs<a class="headerlink" href="#amazon-braket-hybrid-jobs" title="Permalink to this headline">¶</a></h2>
+<p>Amazon Braket Hybrid Jobs offers a way for you to run hybrid quantum-classical algorithms that
+require both classical resources and quantum processing units (QPUs). Hybrid Jobs is designed to
+spin up the requested classical compute, run your algorithm, and release the instances after
+completion so you only pay for what you use. This workflow is ideal for long-running iterative
+algorithms involving both classical and quantum resources. Simply package up your code into a single
+function, create a hybrid job with a single line of code, and Braket will schedule it to run as soon
+as possible without interruption.</p>
+<p>Hybrid jobs have a separate queue from quantum tasks, so once your algorithm starts running, it will
+not be interrupted by variations in the quantum task queue. This helps your long-running algorithms
+run efficiently and predictably. Any quantum tasks created from a running hybrid job will be run
+before any other quantum tasks in the queue. This is particularly beneficial for iterative hybrid
+algorithms where subsequent tasks depend on the outcomes of prior quantum tasks. Examples of such
+algorithms include the Quantum Approximate Optimization Algorithm (QAOA), Variational Quantum
+Eigensolver (VQE), or Quantum Machine Learning (QML). You can also monitor your algorithm’s progress in near-real
+time, enabling you to keep track of costs, budget, or custom metrics such as training loss or
+expectation values.</p>
+<p>Importantly, on specific QPUs, running your algorithm in Hybrid Jobs benefits from <a class="reference external" href="https://docs.aws.amazon.com/braket/latest/developerguide/braket-jobs-parametric-compilation.html">parametric compilation</a>.
+This reduces the overhead associated with the computationally expensive compilation step by compiling a circuit only once and not for every iteration in your hybrid algorithm.
+This dramatically reduces the total runtime for many variational algorithms.
+For long-running hybrid jobs, Braket automatically uses the updated calibration data from the hardware provider when compiling your circuit to ensure the highest quality results.</p>
+</div>
+<div class="section" id="getting-started-with-pennylane">
+<h2>Getting started with PennyLane<a class="headerlink" href="#getting-started-with-pennylane" title="Permalink to this headline">¶</a></h2>
+<p>Let’s setup an algorithm that makes use of both classical and quantum resources. We adapt the <a class="reference internal" href="tutorial_qubit_rotation.html"><span class="doc">PennyLane qubit rotation tutorial</span></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The following demo is only compatible with Python version 3.10.</p>
+</div>
+<p>First, we define a quantum simulator to run the algorithm on. In this example, we will use the Braket
+local simulator before moving onto a QPU.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="nn">qml</span>
+<span class="kn">from</span> <span class="nn">pennylane</span> <span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+
+<span class="n">device</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.device.html#pennylane.device" title="pennylane.device" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">&quot;braket.local.qubit&quot;</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we define a circuit with two rotation gates and measure the expectation value in the
+<span class="math notranslate nohighlight">\(Z\)</span>-basis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@qml</span><span class="o">.</span><span class="n">qnode</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.RX.html#pennylane.RX" title="pennylane.RX" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">RX</span></a><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.RY.html#pennylane.RY" title="pennylane.RY" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">RY</span></a><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.expval.html#pennylane.expval" title="pennylane.expval" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">expval</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.PauliZ.html#pennylane.PauliZ" title="pennylane.PauliZ" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">PauliZ</span></a><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Finally, we create a classical-quantum loop that uses gradient descent to minimize the expectation value.</p>
+<p>We add the <code class="docutils literal notranslate"><span class="pre">log_metric</span></code> function from Braket to record the training progress (see <a class="reference external" href="https://amazon-braket-sdk-python.readthedocs.io/en/stable/_apidoc/braket.jobs.metrics.html">metrics
+documentation</a>).
+When running on AWS, <code class="docutils literal notranslate"><span class="pre">log_metric</span></code> records the metrics in <a class="reference external" href="https://aws.amazon.com/cloudwatch/">Amazon CloudWatch</a>, which is accessible
+through the Braket console page or the Braket SDK. When running locally on your laptop,
+<code class="docutils literal notranslate"><span class="pre">log_metric</span></code> prints the iteration numbers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">braket.jobs.metrics</span> <span class="kn">import</span> <span class="n">log_metric</span>
+
+
+<span class="k">def</span> <span class="nf">qubit_rotation</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">opt</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer" title="pennylane.GradientDescentOptimizer" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span></a><span class="p">(</span><span class="n">stepsize</span><span class="o">=</span><span class="n">stepsize</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+        <span class="c1"># update the circuit parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">expval</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">log_metric</span><span class="p">(</span><span class="n">metric_name</span><span class="o">=</span><span class="s2">&quot;expval&quot;</span><span class="p">,</span> <span class="n">iteration_number</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">expval</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span>
+</pre></div>
+</div>
+<p>To run the entire algorithm, we call the qubit rotation function to see that it runs correctly.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">qubit_rotation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Metrics - timestamp=1695043649.822114; expval=0.38894534132396147; iteration_number=0;
+Metrics - timestamp=1695043649.8757634; expval=0.12290715413453956; iteration_number=1;
+Metrics - timestamp=1695043649.9254549; expval=-0.09181374013482171; iteration_number=2;
+Metrics - timestamp=1695043649.973501; expval=-0.2936094099948542; iteration_number=3;
+Metrics - timestamp=1695043650.020348; expval=-0.5344079938678078; iteration_number=4;
+[0.6767967215302757, 2.3260934173312653]
+</pre></div>
+</div>
+<p>Great! We see the expectation value change with each iteration number and the final parameters were
+returned as a list. Now, instead of running on our laptop, let’s submit this same function to be run
+on AWS cloud.</p>
+</div>
+<div class="section" id="running-as-a-hybrid-job">
+<h2>Running as a hybrid job<a class="headerlink" href="#running-as-a-hybrid-job" title="Permalink to this headline">¶</a></h2>
+<p>To run our algorithm for a long time, we can run it asynchronously with Amazon Braket Hybrid Jobs,
+which fully manages the classical infrastructure so you can focus on the algorithm. For example, you
+can train a larger circuit, or increase the number of iterations. Note that each hybrid job has
+at least a one minute startup time since it creates a containerized environment on Amazon EC2. So
+for very short workloads, such as a single circuit or a batch of circuits, it may suffice for you to
+use quantum tasks.</p>
+<p>We now show how you can go from running your local Python function to running it as a hybrid job.
+Note that only Python 3.10 is supported by default. For custom environments, you can opt to hybrid
+job scripts, or a custom container from Amazon Elastic Container Registry (ECR) (see <a class="reference external" href="https://docs.aws.amazon.com/braket/latest/developerguide/braket-jobs-byoc.html">containers
+documentation</a>).</p>
+<p>The first step to creating a hybrid job is to annotate which function you want to run with the
+<code class="docutils literal notranslate"><span class="pre">&#64;hybrid_job</span></code> decorator. Then you create the job by invoking the function as you would for normal
+Python functions. However, the decorated function returns the hybrid job handle rather than the
+result of the function. To retrieve the results after it has been completed, use <code class="docutils literal notranslate"><span class="pre">job.result()</span></code>.</p>
+<p>The required device argument in the <code class="docutils literal notranslate"><span class="pre">&#64;hybrid_job</span></code> decorator specifies the QPU that the hybrid job
+will have priority access to.
+The device string you give is accessible in the hybrid job instance as the environment variable <code class="docutils literal notranslate"><span class="pre">AMZN_BRAKET_DEVICE_ARN</span></code>.</p>
+<p>When using on-demand simulators or <a class="reference external" href="https://docs.aws.amazon.com/braket/latest/developerguide/pennylane-embedded-simulators.html">embedded simulators</a>,
+you may provide the device argument as string of the form: <code class="docutils literal notranslate"><span class="pre">&quot;local:&lt;provider&gt;/&lt;simulator_name&gt;&quot;</span></code> or simply <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+For example, you may set <code class="docutils literal notranslate"><span class="pre">&quot;local:pennylane/lightning.qubit&quot;</span></code> for the <a class="reference external" href="https://pennylane.ai/performance">PennyLane lightning simulator</a>.</p>
+<p>In the following code, we annotate the <code class="docutils literal notranslate"><span class="pre">qubit_rotation</span></code> function from above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">braket.jobs</span> <span class="kn">import</span> <span class="n">hybrid_job</span>
+
+
+<span class="nd">@hybrid_job</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;local:pennylane/lightning.qubit&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">qubit_rotation_hybrid_job</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">qubit_rotation</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="n">stepsize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we create a hybrid job by calling the function as usual. This returns an <code class="docutils literal notranslate"><span class="pre">AwsQuantumJob</span></code> object
+that contains the device ARN, region, and job name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">qubit_rotation_hybrid_job</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>AwsQuantumJob(&#39;arn&#39;:&#39;arn:aws:braket:&lt;aws-region&gt;:&lt;account_id&gt;:job/qubit-rotation-hybrid-job-1695044583&#39;)
+</pre></div>
+</div>
+<p>The hybrid job automatically captures the function arguments as hyperparameters.
+In this case, we set <code class="docutils literal notranslate"><span class="pre">num_steps</span> <span class="pre">=</span> <span class="pre">10</span></code> and <code class="docutils literal notranslate"><span class="pre">stepsize</span> <span class="pre">=</span> <span class="pre">0.5</span></code> as the hyperparameters.</p>
+<p>We can check the status with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">job</span><span class="o">.</span><span class="n">state</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;QUEUED&#39;
+</pre></div>
+</div>
+<p>Once the hybrid job starts, it will change the status to <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>. We can also check the hybrid
+job status in the Braket console.</p>
+<p>After the hybrid job completes, we can get the results with <code class="docutils literal notranslate"><span class="pre">job.result()</span></code>. For this example, it
+should take approximately 2 minutes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;result&#39;: [0.036420360224358496, 3.1008192940506736]}
+</pre></div>
+</div>
+<p>Any objects in the return statement will be returned in the hybrid job results. Note that the objects
+returned by the function must be a tuple with each element being serializable.
+serializable.</p>
+<p>Additionally, we can plot the metrics recorded during the algorithm. Below we show the expectation
+value decreases with each iteration as expected.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">metrics</span><span class="p">())</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;iteration_number&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;iteration_number&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;expval&quot;</span><span class="p">],</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;iteration number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;expectation value&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulator results&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference external image-reference" href="javascript:void(0);"><img alt="Expectation value per iteration number on QPU." src="../_images/simulator.png" style="width: 75%;" /></a>
+</div>
+</div>
+<div class="section" id="running-on-a-qpu-with-priority">
+<h2>Running on a QPU with priority<a class="headerlink" href="#running-on-a-qpu-with-priority" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to see how well the qubit rotation works on a real QPU. We
+create a hybrid job with the Rigetti device as the priority QPU. We also increase the number of
+steps to 10.</p>
+<p>Using hybrid jobs for iterative algorithms is very beneficial because you retain priority access to the
+target QPU. So once your quantum tasks are created in the hybrid job, they run ahead of other tasks
+waiting in the <em>quantum task queue</em>. This means your
+algorithm will not be interrupted by other quantum tasks, so it will run more efficiently and
+predictably. Quantum tasks submitted as part of a hybrid job have priority, and are aggregated in the <em>priority task queue</em>.</p>
+<p>Hybrid jobs have their own <em>hybrid jobs queue</em> so that only a single
+hybrid job can run on a QPU at a time.
+Each QPU has its own hybrid jobs queue. Note that this is a different queue from the quantum tasks. For a single quantum circuit, or a batch of circuits, it’s
+recommended to create quantum tasks instead of hybrid jobs.
+For more information on quantum tasks and hybrid jobs queue see the <a class="reference external" href="https://docs.aws.amazon.com/braket/latest/developerguide/braket-task-when.html">Amazon Braket documentation</a>.</p>
+<p>To get QPU priority, you must ensure that the device ARN used within the function matches that
+specified in the decorator. For convenience, you can use the helper function <code class="docutils literal notranslate"><span class="pre">get_device_arn()</span></code> to
+automatically capture the device ARN declared in <code class="docutils literal notranslate"><span class="pre">&#64;hybrid_job</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only hybrid jobs running on AWS receive priority. Hybrid jobs running <a class="reference external" href="https://docs.aws.amazon.com/braket/latest/developerguide/braket-jobs-local-mode.html">locally</a>,
+or with a mismatched device ARN do not get priority task queueing.</p>
+</div>
+<p>In the previous example, we declared the local simulator outside the decorated function scope.
+However, for AWS devices such as QPUs or on-demand simulators, the device must be declared within the function scope.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>AWS devices must be declared within the body of the decorated function.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">braket.devices</span> <span class="kn">import</span> <span class="n">Devices</span>
+
+<span class="n">device_arn</span> <span class="o">=</span> <span class="n">Devices</span><span class="o">.</span><span class="n">Rigetti</span><span class="o">.</span><span class="n">AspenM3</span>
+
+
+<span class="nd">@hybrid_job</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device_arn</span><span class="p">)</span>  <span class="c1"># set priority QPU</span>
+<span class="k">def</span> <span class="nf">qpu_qubit_rotation_hybrid_job</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="c1"># AWS devices must be declared within the decorated function.</span>
+    <span class="n">device</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.device.html#pennylane.device" title="pennylane.device" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span>
+        <span class="s2">&quot;braket.aws.qubit&quot;</span><span class="p">,</span>
+        <span class="n">device_arn</span><span class="o">=</span><span class="n">device_arn</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>  <span class="c1"># Make sure the device ARN matches the hybrid job device ARN</span>
+        <span class="n">wires</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">shots</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@qml</span><span class="o">.</span><span class="n">qnode</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.RX.html#pennylane.RX" title="pennylane.RX" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">RX</span></a><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.RY.html#pennylane.RY" title="pennylane.RY" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">RY</span></a><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.expval.html#pennylane.expval" title="pennylane.expval" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">expval</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.PauliZ.html#pennylane.PauliZ" title="pennylane.PauliZ" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">PauliZ</span></a><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">opt</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer" title="pennylane.GradientDescentOptimizer" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">qml</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span></a><span class="p">(</span><span class="n">stepsize</span><span class="o">=</span><span class="n">stepsize</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+        <span class="c1"># update the circuit parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">expval</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">log_metric</span><span class="p">(</span><span class="n">metric_name</span><span class="o">=</span><span class="s2">&quot;expval&quot;</span><span class="p">,</span> <span class="n">iteration_number</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">expval</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span>
+</pre></div>
+</div>
+<p>To get a sense of how long we will wait before the hybrid job runs, we can check the hybrid job
+queue depth with <code class="docutils literal notranslate"><span class="pre">AwsDevice(device_arn).queue_depth().jobs</span></code>. We can also check if the device is
+currently available with <code class="docutils literal notranslate"><span class="pre">AwsDevice(device_arn).is_available()</span></code>.</p>
+<p>When there are no other hybrid jobs in the queue ahead of you, and the device is available, the
+hybrid job will start running.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Running the following cell will only run once the QPU is available. This may take a long
+time and will result in usage fees charged to your AWS account. Only run the cell if you
+are comfortable with the potential wait-time and costs. We recommend monitoring the Billing &amp;
+Cost Management Dashboard on the AWS console.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">qpu_job</span> <span class="o">=</span> <span class="n">qpu_qubit_rotation_hybrid_job</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qpu_job</span><span class="p">)</span>
+<span class="n">qpu_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>AwsQuantumJob(&#39;arn&#39;:&#39;arn:aws:braket:&lt;aws-region&gt;:&lt;account_id&gt;:job/qpu-qubit-rotation-hybrid-job-1695044576&#39;)
+{&#39;result&#39;: [0.034321330234338991, 3.058282990501767]}
+</pre></div>
+</div>
+<p>Next, we plot the expectation value per iteration number below. We see that on a real QPU, the data
+is not as smooth as the simulator, but the minimum still is detected correctly!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">qpu_job</span><span class="o">.</span><span class="n">metrics</span><span class="p">())</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;iteration_number&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;iteration_number&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;expval&quot;</span><span class="p">],</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;teal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;iteration number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;expectation value&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;QPU results&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference external image-reference" href="javascript:void(0);"><img alt="Expectation value per iteration number on QPU." src="../_images/qpu.png" style="width: 75%;" /></a>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial, we showed how to migrate from local Python functions to running algorithms on simulators and QPUs on Amazon Braket.
+We adapted the simple example of rotating a qubit using gradient descent, running this on both a local simulator and a real QPU.
+Using Amazon Braket Hybrid Jobs allowed us to run algorithms asynchronously, scale classical compute using AWS, and obtain priority access to the selected QPU for the duration of our algorithm.</p>
+</div>
+<div class="section" id="about-the-author">
+<h2>About the author<a class="headerlink" href="#about-the-author" title="Permalink to this headline">¶</a></h2>
+<div class="bio" >
+    <div class="photo" >
+        <img class="photo__img" src="../_static/authors/matthew_beach.png" alt="Matthew Beach" >
+    </div>
+    <div class="bio-text">
+        <h4 class="bio-text__author-name">Matthew Beach</h4>
+        <p class="bio-text__author-description">Matthew Beach is an Applied Scientist at Amazon Braket. His research focuses on the intersection of machine learning and quantum physics with an emphasis on using computational methods to study many-body systems.</p>
+    </div>
+</div><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-demos-getting-started-with-hybrid-jobs-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d065d8a2c56fd9d961e20690c635d2c4/getting_started_with_hybrid_jobs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">getting_started_with_hybrid_jobs.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d354d278228a4f05674e8d15d5220fa3/getting_started_with_hybrid_jobs.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">getting_started_with_hybrid_jobs.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    <script type="text/javascript">
+        // This script ensures that the active navbar entry switches
+        // from 'QML' to 'Demos' for any webpage within the demos/ directory,
+        // or for any of the demonstration landing pages
+        // (e.g., demos_optimization).
+        var pagename = document.location.href.match(/[^\/]+$/)[0];
+        var dir = document.URL.substr(0,document.URL.lastIndexOf('/')).match(/[^\/]+$/)[0];
+
+        if (pagename.includes("demos") || pagename.includes("demonstrations") || dir.includes("demos")) {
+
+            $(".nav-item.active").removeClass("active");
+            var demos_link = $('.navbar-nav a').filter(function(index) { return $(this).text() === "Demos"; })[0]
+            $(demos_link).parent().addClass("active");
+        }
+    </script>
+
+              <div id="bottom-dl" class="xanadu-call-to-action-links">
+                <div id="tutorial-type">demos/getting_started_with_hybrid_jobs</div>
+                <div class="download-python-link">
+                  <i class="fab fa-python"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Python script</div>
+                </div>
+                <div class="download-notebook-link">
+                  <i class="fas fa-download"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Notebook</div>
+                </div>
+                <div class="github-view-link">
+                  <i class="fab fa-github"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">View on GitHub</div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        
+<div class="localtoc-container nano has-scrollbar">
+  <div class="nano-content">
+    <div id="localtoc">
+        
+          <h3>Contents</h3>
+          <!-- Display the ToC for the current document if it is not empty. -->
+          <ul class='current'>
+<li class='current'><a class="reference internal" href="#">Getting started with Amazon Braket Hybrid Jobs</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#amazon-braket-hybrid-jobs">Amazon Braket Hybrid Jobs</a></li>
+<li class='current'><a class="reference internal" href="#getting-started-with-pennylane">Getting started with PennyLane</a></li>
+<li class='current'><a class="reference internal" href="#running-as-a-hybrid-job">Running as a hybrid job</a></li>
+<li class='current'><a class="reference internal" href="#running-on-a-qpu-with-priority">Running on a QPU with priority</a></li>
+<li class='current'><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class='current'><a class="reference internal" href="#about-the-author">About the author</a></li>
+</ul>
+</li>
+</ul>
+
+        
+    </div>
+
+    <div class="xanadu-call-to-action-links">
+        <h3>Downloads</h3>
+        <div id="tutorial-type">demos/getting_started_with_hybrid_jobs</div>
+        <div class="download-python-link">
+            <i class="fab fa-python"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Python script</div>
+        </div>
+        <div class="download-notebook-link">
+            <i class="fas fa-download"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Notebook</div>
+        </div>
+        <div class="github-view-link">
+            <i class="fab fa-github"></i>&nbsp;
+            <div class="call-to-action-desktop-view">View on GitHub</div>
+        </div>
+    </div>
+    <div id="related-tutorials" class="mt-4">
+      <h3> Related</h3>
+    </div>
+  </div>
+</div>
+
+
+    
+          <div class="up-button">
+            
+              
+                <a href="../demos_getting-started.html"><i class="fas fa-angle-double-left"></i></a>
+              
+            
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../demos_qml.html" title="Quantum machine learning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ibm_pennylane.html" title="Using PennyLane with IBM’s quantum devices and Qiskit"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_getting-started.html" >Getting Started</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Getting started with Amazon Braket Hybrid Jobs</a></li> 
+      </ul>
+    </div>
+  <script type="text/javascript">
+    $("#mobile-toggle").click(function () {
+      $("#left-column").slideToggle("slow");
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- MathJax -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  <!-- NanoScroller -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+  <!-- Syntax Highlighting -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript">
+    $("a.reference.internal").each(function(){
+      var link = $(this).attr("href");
+
+      var hash = link.split("#")[1];
+      var page = link.split("#")[0].split("/").slice(-1)[0].replace(".html", "");
+
+      if (hash == page) {
+        $(this).attr("href", link.split("#")[0]);
+      }
+    });
+
+    $(".document > .section").removeClass("section");
+    $("h1 ~ .section").removeClass("section");
+    $(".localtoc-container .nano-content").css("height", $("#content").height());
+    $(".localtoc-container").css("height", $("#content").height());
+    $(".nano").nanoScroller();
+  </script>
+
+  <script type="text/javascript">
+      $(window).scroll(function(){
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < 342) {
+          $(".localtoc-container").css("height", "calc(100% - " + (342 - scrollBottom) + "px)");
+          $(".localtoc-container .nano-content").css("height", "calc(100% - 119px)");
+        }
+      });
+  </script>
+
+  <script type="text/javascript">
+    if ($(".current").length) {
+      var target = $(".current")[0]
+      var rect = target.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight) {
+          $(".nano").nanoScroller({ scrollTo: $(".current") });
+      } else {
+          $(".nano").nanoScroller({ scrollTop: 0 });
+      }
+    }
+    $(document).ready(function () {
+        $(".css-transitions-only-after-page-load").each(function (index, element) {
+            setTimeout(function () { $(element).removeClass("css-transitions-only-after-page-load") }, 10);
+        });
+        if (window.location.hash) {
+          var target = $("[id='" + window.location.hash.substr(1) + "']");
+          if (target.closest(".collapse").length) {
+            target.closest(".collapse").addClass("show");
+            target.closest(".collapse").prev().find(".rotate").addClass("up");
+          }
+        }
+    });
+  </script>
+
+    <script type="text/javascript">
+    var downloadNote = $(".sphx-glr-download-link-note.admonition.note");
+    if (downloadNote.length >= 1) {
+      var tutorialUrlArray = $("#tutorial-type").text().split('/');
+
+      if (tutorialUrlArray[0] == "demos") {
+        tutorialUrlArray[0] = "demonstrations";
+      }
+
+      var githubLink = "https://github.com/" + "PennyLaneAI/qml" + "/blob/master/" + tutorialUrlArray.join("/") + ".py",
+          pythonLink = $(".sphx-glr-download .reference.download")[0].href,
+          notebookLink = $(".sphx-glr-download .reference.download")[1].href;
+
+      $(".download-python-link").wrap("<a href=" + pythonLink + " data-behavior='call-to-action-event' data-response='Download Python script' download target='_blank'/>");
+      $(".download-notebook-link").wrap("<a href=" + notebookLink + " data-behavior='call-to-action-event' data-response='Download Notebook' download target='_blank'/>");
+      $(".github-view-link").wrap("<a href=" + githubLink + " data-behavior='call-to-action-event' data-response='View on Github' target='_blank'/>");
+      $("#right-column").addClass("page-shadow");
+    } else {
+      $(".xanadu-call-to-action-links").hide();
+      $("#bottom-dl").attr('style','display: none !important');
+    }
+    </script>
+
+    <script type="text/javascript">
+      function makeUL(urls, text) {
+          var list = document.createElement('ul');
+
+          for (var i = 0; i < urls.length; i++) {
+              var item = document.createElement('li');
+              var a = document.createElement('a');
+              var linkText = document.createTextNode(text[i]);
+              a.appendChild(linkText);
+              a.href = urls[i];
+              item.appendChild(a);
+              list.appendChild(item);
+          }
+          return list;
+      }
+
+      if (typeof related_tutorials !== 'undefined') {
+          document.getElementById('related-tutorials').appendChild(makeUL(related_tutorials, related_tutorials_titles));
+          $("#related-tutorials ul li a").append(' <i class="fas fa-angle-double-right" style="font-size: smaller;"></i>')
+          $("#related-tutorials").show();
+
+    } else {
+          $("#related-tutorials").hide();
+    }
+    </script>
+
+  <!-- Account for MathJax when navigating to anchor tags. -->
+  <script type="text/javascript">
+    function scrollToElement(e) {
+      // Scrolls to the given element, taking into account the navbar.
+      MathJax.Hub.Queue(function() {
+        // The following MUST be done asynchronously to take effect.
+        setTimeout(function() {
+          const navbar = document.querySelector("nav.navbar");
+          const navbarHeight = navbar ? navbar.offsetHeight : 0;
+          const scrollToY = e.offsetTop + e.offsetParent.offsetTop - navbarHeight;
+          window.scrollTo(0, scrollToY);
+        }, 0);
+      });
+    }
+
+    function scrollToFragment(fragment) {
+      // Scrolls to the position of the given URL fragment (which includes the "#").
+      const elementID = fragment.replace(".", "\\.");
+      if (elementID !== "") {
+        const element = document.querySelector(elementID);
+        if (element !== null) {
+          scrollToElement(element);
+        }
+      }
+    }
+
+    $(document).ready(() => {
+      scrollToFragment(window.location.hash);
+      window.addEventListener("popstate", (_) => scrollToFragment(document.location.hash), false);
+    });
+  </script>
+
+  <!-- Hide the rendering of :orphan: metadata. -->
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const elements = document.getElementsByClassName("field-odd");
+      for (const element of elements) {
+          if (element.innerHTML.trim() === "orphan") {
+            element.style.display = "none";
+          }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    jQuery.noConflict(true);
+  </script>
+
+  
+
+<footer class="page-footer text-md-left pt-4">
+
+  <hr class="pb-0 mb-0">
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+
+      
+      <!-- About -->
+      <div class="col-md-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <p>        PennyLane is an open-source software framework for quantum
+        machine learning, quantum chemistry, and quantum computing, 
+        with the ability to run on all hardware.
+        Maintained with ❤️ by Xanadu.
+        </p>
+      </div>
+      
+
+      <!-- Links -->
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://pennylane.ai/">Home</a></li>
+          
+          <li><a href="https://pennylane.ai/qml">Learn</a></li>
+          
+          <li><a href="https://pennylane.ai/qml/demonstrations.html">Demonstrations</a></li>
+          
+          <li><a href="https://docs.pennylane.ai/">Documentation</a></li>
+          
+          <li><a href="https://github.com/PennyLaneAI/pennylane">GitHub</a></li>
+          
+          <li><a href="https://twitter.com/pennylaneai">Twitter</a></li>
+          
+          <li><a href="https://pennylane.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">Xanadu</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://xanadu.ai/">Home</a></li>
+          
+          <li><a href="https://xanadu.ai/about/">About</a></li>
+          
+          <li><a href="https://xanadu.ai/photonics">Hardware</a></li>
+          
+          <li><a href="https://xanadu.ai/careers/">Careers</a></li>
+          
+          <li><a href="https://cloud.xanadu.ai">Cloud</a></li>
+          
+          <li><a href="https://discuss.pennylane.ai/">Forum</a></li>
+          
+          <li><a href="https://xanadu.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+  <hr>
+
+  <!-- Social -->
+  <div class="social-section text-center">
+      <ul class="list-unstyled list-inline mb-0">
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://twitter.com/PennyLaneAI"><i class="fab fa-twitter"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://github.com/PennyLaneAI/pennylane"><i class="fab fa-github"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://linkedin.com/company/xanaduai/"><i class="fab fa-linkedin-in"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://discuss.pennylane.ai"><i class="fab fa-discourse"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://xanadu-quantum.slack.com/join/shared_invite/zt-nkwn25v9-H4hituCb_PUj4idG0MhSug#/shared-invite/email"><i class="fab fa-slack"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://pennylane.ai/blog/"><i class="fas fa-rss"> </i></a></li>
+          
+      </ul>
+      
+        
+          <a href="https://xanadu.us17.list-manage.com/subscribe?u=725f07a1d1a4337416c3129fd&id=294b062630" style="font-size: initial;">
+            Stay updated with our newsletter
+          </a>
+        
+      
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-3 mt-0 text-center">
+      <div class="container-fluid">
+            Copyright &copy; 2022, Xanadu Quantum Technologies, Inc.
+
+        
+          <br>
+          TensorFlow, the TensorFlow logo, and any related marks are trademarks of Google Inc.
+        
+      </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,1067 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="../_static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../_static/favicon.ico">
+  
+
+
+  <meta property="og:title" content="Initial state preparation for quantum chemistry &#8212; PennyLane">
+  <meta property="og:url" content="https://pennylane.ai/qml/demos/tutorial_initial_state_preparation.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  
+  
+  
+  
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.14/css/mdb.min.css">
+  <!-- NanoScroller -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/css/nanoscroller.min.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/tomorrow-night.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       "HTML-CSS": { scale: 90, linebreaks: { automatic: true } },
+       TeX: {
+         Macros: {
+           pr : ['|\#1\\rangle\\langle\#1|',1],
+           ket: ['\\left| \#1\\right\\rangle',1],
+           bra: ['\\left\\langle \#1\\right|',1],
+           xket: ['\\left| \#1\\right\\rangle_x',1],
+           xbra: ['\\left\\langle \#1\\right|_x',1],
+           braket: ['\\langle \#1 \\rangle',1],
+           braketD: ['\\langle \#1 \\mid \#2 \\rangle',2],
+           braketT: ['\\langle \#1 \\mid \#2 \\mid \#3 \\rangle',3],
+           ketbra: ['| #1 \\rangle \\langle #2 |',2],
+           hc: ['\\text{h.c.}',0],
+           cc: ['\\text{c.c.}',0],
+           h: ['\\hat',0],
+           nn: ['\\nonumber',0],
+           di: ['\\frac{d}{d \#1}',1],
+           uu: ['\\mathcal{U}',0],
+           inn: ['\\text{in}',0],
+           out: ['\\text{out}',0],
+           vac: ['\\text{vac}',0],
+           I: ['\\hat{\\mathbf{1}}',0],
+           x: ['\\hat{x}',0],
+           p: ['\\hat{p}',0],
+           a: ['\\hat{a}',0],
+           ad: ['\\hat{a}^\\dagger',0],
+           n: ['\\hat{n}',0],
+           nbar: ['\\overline{n}',0],
+           sech: ['\\mathrm{sech~}',0],
+           tanh: ['\\mathrm{tanh~}',0],
+           re: ['\\text{Re}',0],
+           im: ['\\text{Im}',0],
+           tr: ['\\mathrm{Tr} #1',1],
+           sign: ['\\text{sign}',0],
+           overlr: ['\\overset\\leftrightarrow{\#1}',1],
+           overl: ['\\overset\leftarrow{\#1}',1],
+           overr: ['\\overset\rightarrow{\#1}',1],
+           avg: ['\\left< \#1 \\right>',1],
+           slashed: ['\\cancel{\#1}',1],
+           bold: ['\\boldsymbol{\#1}',1],
+           d: ['\\mathrm d',0],
+           expect: ["\\langle #1 \\rangle",1],
+           pde: ["\\frac{\\partial}{\\partial \#1}",1],
+           R: ["\\mathbb{R}",0],
+           C: ["\\mathbb{C}",0],
+           Ad: ["\\text{Ad}",0],
+           Var: ["\\text{Var}",0],
+           bx: ["\\mathbf{x}", 0],
+           bm: ["\\boldsymbol{\#1}",1],
+           haf: ["\\mathrm{haf}",0],
+           lhaf: ["\\mathrm{lhaf}",0]
+         }
+       }
+     });
+     </script>
+
+  <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130507810-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130507810-1');
+      </script>
+  
+    <title>Initial state preparation for quantum chemistry &#8212; PennyLane  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/xanadu.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/light-slider.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/hubs.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="canonical" href="https://pennylane.ai/qml/demos/tutorial_initial_state_preparation.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Optimization" href="../demos_optimization.html" />
+    <link rel="prev" title="Resource estimation for quantum chemistry" href="tutorial_resource_estimation.html" /> 
+  </head><body><nav class="navbar navbar-expand-lg navbar-light white sticky-top">
+
+<!-- Logo and Title -->
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <a class="navbar-brand nav-link" href="https://pennylane.ai">
+    
+  <img class="pr-1" src=" ../_static/logo.png" width="28px"></img>
+  
+    <img id="navbar-wordmark" src="../_static/pennylane.svg"></img>
+  
+  </a>
+
+
+  <!-- [Mobile] Collapse Button -->
+  <div class="row right">
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <!-- [Mobile] Collapsible Content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+
+    <!-- Links on the Left -->
+    <ul class="navbar-nav mr-auto">
+      
+        
+          
+            <li class="nav-item active">
+              <a class="nav-link" href="https://pennylane.ai/qml/">
+                
+  
+    Learn
+  
+
+              </a>
+              <span class="sr-only">(current)</span>
+            </li>
+          
+
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/qml/demonstrations.html">
+                
+  
+    Demos
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/install.html">
+                
+  
+    Install
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/plugins.html">
+                
+  
+    Plugins
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://docs.pennylane.ai">
+                
+  
+    Documentation
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/blog/">
+                
+  
+    Blog
+  
+
+            </a>
+          </li>
+        
+      
+    </ul>
+
+    <!-- Links on the Right -->
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://pennylane.ai/faq.html">
+            <i class="fas fa-question pr-1"></i> FAQ
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://discuss.pennylane.ai/">
+            <i class="fab fa-discourse pr-1"></i> Support
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/PennyLaneAI/pennylane">
+            <i class="fab fa-github pr-1"></i> GitHub
+          </a>
+        </li>
+      
+
+    </ul>
+  </div>
+
+</nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../demos_optimization.html" title="Optimization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial_resource_estimation.html" title="Resource estimation for quantum chemistry"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_quantum-chemistry.html" accesskey="U">Quantum Chemistry</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Initial state preparation for quantum chemistry</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+        <div id="content">
+          <div id="right-column">
+            
+            
+
+            <div class="document clearer body">
+              
+    <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-demos-tutorial-initial-state-preparation-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="initial-state-preparation-for-quantum-chemistry">
+<span id="sphx-glr-demos-tutorial-initial-state-preparation-py"></span><h1>Initial state preparation for quantum chemistry<a class="headerlink" href="#initial-state-preparation-for-quantum-chemistry" title="Permalink to this headline">¶</a></h1>
+<p>A high-quality initial state can significantly reduce the runtime of many quantum algorithms. From
+the variational quantum eigensolver (VQE) to quantum phase estimation (QPE) and even the recent
+<a class="reference external" href="https://pennylane.ai/blog/2023/06/from-nisq-to-isq/">intermediate-scale quantum (ISQ)</a> algorithms, obtaining the ground state of a chemical system requires
+a good initial state. For instance, in the case of VQE, a good initial state directly translates into fewer
+optimization steps. In QPE, the probability of measuring the ground-state energy is directly
+proportional to the overlap squared of the initial and ground states. Even beyond quantum chemistry,
+good initial guesses are important for algorithms like quantum approximate optimization (QAOA)
+and Grover search.</p>
+<p>Much like searching for a needle in a haystack, there are a lot of things you might try
+to prepare a good guess for the ground state in the high-dimensional Hilbert space. In this
+tutorial, we show how to use traditional computational chemistry techniques to
+get a good initial state. Such an initial state will not be exactly
+the ground state, but it will certainly be better than the standard guess of a computational
+basis state <span class="math notranslate nohighlight">\(\ket{0}^{\otimes N}\)</span> or the Hartree-Fock state.</p>
+<div class="figure align-center">
+<a class="reference external image-reference" href="javascript:void(0)"><img alt="../_images/qchem_input_states.png" src="../_images/qchem_input_states.png" style="width: 65%;" /></a>
+</div>
+<div class="section" id="importing-initial-states">
+<h2>Importing initial states<a class="headerlink" href="#importing-initial-states" title="Permalink to this headline">¶</a></h2>
+<p>We can import initial states obtained from several post-Hartree-Fock quantum chemistry methods
+to PennyLane. These methods are incredibly diverse in terms of their outputs, not always returning
+an object that is easy to turn into a PennyLane state vector.</p>
+<p>We have already done this hard conversion work: all that you need to do is run these methods and
+pass their outputs to PennyLane’s <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">import_state()</span></code></a> function. The currently
+supported methods are configuration interaction with singles and doubles (CISD), coupled cluster
+(CCSD), density-matrix renormalization group (DMRG) and semistochastic heat-bath configuration
+interaction (SHCI).</p>
+<p>We now show how this works on the linear <span class="math notranslate nohighlight">\(\text{H}_3^+\)</span> molecule as an example.</p>
+<div class="section" id="cisd-states">
+<h3>CISD states<a class="headerlink" href="#cisd-states" title="Permalink to this headline">¶</a></h3>
+<p>The first line of attack for initial state preparation is often a CISD calculation, performed with the <a class="reference external" href="https://github.com/pyscf/pyscf">PySCF</a>
+library. CISD is unsophisticated, but it is fast. It will not be of much help for strongly correlated molecules,
+but it is better than Hartree-Fock. Here is the code example using the restricted Hartree-Fock
+orbitals (<a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">import_state()</span></code></a> works for unrestricted orbitals, too).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="kn">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">ci</span>
+<span class="kn">from</span> <span class="nn">pennylane.qchem</span> <span class="kn">import</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a>
+<span class="kn">from</span> <span class="nn">pennylane</span> <span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="c1"># create the H3+ molecule</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                  <span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">R</span><span class="p">)],</span>
+                  <span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">R</span><span class="p">)]],</span> <span class="n">charge</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># perfrom restricted Hartree-Fock and then CISD</span>
+<span class="n">myhf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">myci</span> <span class="o">=</span> <span class="n">ci</span><span class="o">.</span><span class="n">CISD</span><span class="p">(</span><span class="n">myhf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a><span class="p">(</span><span class="n">myci</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CISD-based state vector: </span><span class="se">\n</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span><span class="o">.</span><span class="n">real</span></a><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>converged SCF energy = -1.13616963888333
+E(RCISD) = -1.182690605466228  E_corr = -0.04652096658289716
+CISD-based state vector:
+[ 0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.     -0.2243  0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.9745  0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.    ]
+</pre></div>
+</div>
+<p>The final object, PennyLane’s state vector <code class="docutils literal notranslate"><span class="pre">wf_cisd</span></code>, is ready to be used as an
+initial state in a quantum circuit in PennyLane–we will showcase this below for VQE.</p>
+<p>Conversion for CISD to a state vector is straightforward: simply assign the PySCF-stored
+CI coefficients to appropriate entries in the state vector based on the determinant they correspond to.
+The second attribute passed to <code class="docutils literal notranslate"><span class="pre">import_state()</span></code>, <code class="docutils literal notranslate"><span class="pre">tol</span></code>, specifies the cutoff beyond
+which contributions to the wavefunctions are neglected. Internally, wavefunctions are
+stored in their Slater determinant representation. If their prefactor coefficient
+is below <code class="docutils literal notranslate"><span class="pre">tol</span></code>, those determinants are dropped from the expression.</p>
+</div>
+<div class="section" id="ccsd-states">
+<h3>CCSD states<a class="headerlink" href="#ccsd-states" title="Permalink to this headline">¶</a></h3>
+<p>The function <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">import_state()</span></code></a> is general and works similarly for CCSD. It can
+automatically detect the input type and apply the appropriate conversion protocol.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="kn">import</span> <span class="n">cc</span>
+
+<span class="n">mycc</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">CCSD</span><span class="p">(</span><span class="n">myhf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_ccsd</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CCSD-based state vector: </span><span class="se">\n</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_ccsd</span><span class="o">.</span><span class="n">real</span></a><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>E(CCSD) = -1.182690605467108  E_corr = -0.04652096658377671
+CCSD-based state vector:
+[ 0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.     -0.2243  0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.      0.      0.      0.9745  0.      0.      0.      0.      0.
+  0.      0.      0.      0.      0.      0.      0.      0.      0.
+  0.    ]
+</pre></div>
+</div>
+<p>For CCSD conversion, at present the exponential form is expanded and terms are collected <strong>to
+second order</strong> to obtain the CI coefficients.</p>
+</div>
+<div class="section" id="dmrg-states">
+<h3>DMRG states<a class="headerlink" href="#dmrg-states" title="Permalink to this headline">¶</a></h3>
+<p>For more complex or more correlated molecules, initial states from DMRG or
+SHCI will be better options. DMRG calculations involve using the library <a class="reference external" href="https://github.com/block-hczhai/block2-preview">Block2</a>,
+which can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>block2
+</pre></div>
+</div>
+<p>The DMRG calculation is run on top of the molecular orbitals obtained by Hartree-Fock,
+stored in the <code class="docutils literal notranslate"><span class="pre">myhf</span></code> object, which we can reuse from before.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="kn">import</span> <span class="n">mcscf</span>
+<span class="kn">from</span> <span class="nn">pyblock2.driver.core</span> <span class="kn">import</span> <span class="n">DMRGDriver</span><span class="p">,</span> <span class="n">SymmetryTypes</span>
+<span class="kn">from</span> <span class="nn">pyblock2._pyscf.ao2mo</span> <span class="kn">import</span> <span class="n">integrals</span> <span class="k">as</span> <span class="n">itg</span>
+
+<span class="c1"># obtain molecular integrals and other parameters for DMRG</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">mcscf</span><span class="o">.</span><span class="n">CASCI</span><span class="p">(</span><span class="n">myhf</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">nao</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span><span class="p">)</span>
+<span class="n">ncas</span><span class="p">,</span> <span class="n">n_elec</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">ecore</span><span class="p">,</span> <span class="n">h1e</span><span class="p">,</span> <span class="n">g2e</span><span class="p">,</span> <span class="n">orb_sym</span> <span class="o">=</span> \
+                <span class="n">itg</span><span class="o">.</span><span class="n">get_rhf_integrals</span><span class="p">(</span><span class="n">myhf</span><span class="p">,</span> <span class="n">mc</span><span class="o">.</span><span class="n">ncore</span><span class="p">,</span> <span class="n">mc</span><span class="o">.</span><span class="n">ncas</span><span class="p">,</span> <span class="n">g2e_symm</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># initialize the DMRG solver, Hamiltonian (as matrix-product operator, MPO) and</span>
+<span class="c1"># state (as matrix-product state, MPS)</span>
+<span class="n">driver</span> <span class="o">=</span> <span class="n">DMRGDriver</span><span class="p">(</span><span class="n">scratch</span><span class="o">=</span><span class="s2">&quot;./dmrg_temp&quot;</span><span class="p">,</span> <span class="n">symm_type</span><span class="o">=</span><span class="n">SymmetryTypes</span><span class="o">.</span><span class="n">SZ</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">initialize_system</span><span class="p">(</span><span class="n">n_sites</span><span class="o">=</span><span class="n">ncas</span><span class="p">,</span> <span class="n">n_elec</span><span class="o">=</span><span class="n">n_elec</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="n">spin</span><span class="p">,</span> <span class="n">orb_sym</span><span class="o">=</span><span class="n">orb_sym</span><span class="p">)</span>
+<span class="n">mpo</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">get_qc_mpo</span><span class="p">(</span><span class="n">h1e</span><span class="o">=</span><span class="n">h1e</span><span class="p">,</span> <span class="n">g2e</span><span class="o">=</span><span class="n">g2e</span><span class="p">,</span> <span class="n">ecore</span><span class="o">=</span><span class="n">ecore</span><span class="p">,</span> <span class="n">iprint</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ket</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">get_random_mps</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;GS&quot;</span><span class="p">)</span>
+
+<span class="c1"># execute DMRG by modifying the ket state in-place to minimize the energy</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">dmrg</span><span class="p">(</span><span class="n">mpo</span><span class="p">,</span> <span class="n">ket</span><span class="p">,</span> <span class="n">n_sweeps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">bond_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">],</span>\
+                <span class="n">noises</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-3</span><span class="p">,</span><span class="mf">1e-5</span><span class="p">],</span><span class="n">thrds</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">1e-7</span><span class="p">],</span><span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+<span class="c1"># post-process the MPS to get an initial state</span>
+<span class="n">dets</span><span class="p">,</span> <span class="n">coeffs</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">get_csf_coefficients</span><span class="p">(</span><span class="n">ket</span><span class="p">,</span> <span class="n">iprint</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">dets</span> <span class="o">=</span> <span class="n">dets</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">wf_dmrg</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a><span class="p">((</span><span class="n">dets</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DMRG-based state vector: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">wf_dmrg</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DMRG-based<span class="w"> </span>state<span class="w"> </span>vector
+<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">     </span>-0.2243<span class="w">  </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.9745<span class="w">  </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">    </span><span class="o">]</span>
+</pre></div>
+</div>
+<p>The crucial part is calling <code class="docutils literal notranslate"><span class="pre">get_csf_coefficients()</span></code> on the solution stored in
+MPS form in the <code class="docutils literal notranslate"><span class="pre">ket</span></code>. This triggers an internal reconstruction calculation that
+converts the MPS to the sum of Slater determinants form, returning the output
+as a tuple <code class="docutils literal notranslate"><span class="pre">(array([int]),</span> <span class="pre">array(float]))</span></code>. The first element expresses a given Slater
+determinant using Fock occupation vectors of length equal to the number of spatial
+orbitals. In Block2 notation, the entries can be <code class="docutils literal notranslate"><span class="pre">0</span></code> (orbital unoccupied), <code class="docutils literal notranslate"><span class="pre">1</span></code> (orbital occupied with spin-up
+electron), <code class="docutils literal notranslate"><span class="pre">2</span></code> (occupied with spin-down), and <code class="docutils literal notranslate"><span class="pre">3</span></code> (doubly occupied). The first
+element, <code class="docutils literal notranslate"><span class="pre">array([int])</span></code>, must be converted to <code class="docutils literal notranslate"><span class="pre">list</span></code>
+for <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">import_state()</span></code></a> to accept it.
+The second element stores the CI coefficients.</p>
+<p>In principle, this functionality can be used to generate any initial state, provided
+the user specifies a list of Slater determinants and their coefficients in this form.
+Let’s take this opportunity to create the Hartree-Fock initial state, to compare the
+other states against it later on.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pennylane</span> <span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">hf_primer</span> <span class="o">=</span> <span class="p">([[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]))</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_hf</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a><span class="p">(</span><span class="n">hf_primer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shci-states">
+<h3>SHCI states<a class="headerlink" href="#shci-states" title="Permalink to this headline">¶</a></h3>
+<p>The SHCI calculations utilize the library <a class="reference external" href="https://github.com/sanshar/Dice">Dice</a>, and can be run
+using PySCF through the interface module <a class="reference external" href="https://github.com/pyscf/shciscf">SHCI-SCF</a>.
+For Dice, the execution process is similar to that of DMRG:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf.shciscf</span> <span class="kn">import</span> <span class="n">shci</span>
+
+<span class="c1"># prepare PySCF CASCI object, whose solver will be the SHCI method</span>
+<span class="n">ncas</span><span class="p">,</span> <span class="n">nelecas_a</span><span class="p">,</span> <span class="n">nelecas_b</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">nao</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="n">myshci</span> <span class="o">=</span> <span class="n">mcscf</span><span class="o">.</span><span class="n">CASCI</span><span class="p">(</span><span class="n">myhf</span><span class="p">,</span> <span class="n">ncas</span><span class="p">,</span> <span class="p">(</span><span class="n">nelecas_a</span><span class="p">,</span> <span class="n">nelecas_b</span><span class="p">))</span>
+
+<span class="c1"># set up essentials for the SHCI solver</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;shci_output.out&quot;</span>
+<span class="n">myshci</span><span class="o">.</span><span class="n">fcisolver</span> <span class="o">=</span> <span class="n">shci</span><span class="o">.</span><span class="n">SHCI</span><span class="p">(</span><span class="n">myhf</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">myshci</span><span class="o">.</span><span class="n">fcisolver</span><span class="o">.</span><span class="n">outputFile</span> <span class="o">=</span> <span class="n">output_file</span>
+
+<span class="c1"># execute SHCI through the PySCF interface</span>
+<span class="n">e_tot</span><span class="p">,</span> <span class="n">e_ci</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_energies</span> <span class="o">=</span> <span class="n">myshci</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># post-process the shci_output.out to extract the wave function</span>
+<span class="c1"># results and create the tuple of dets (list([str])) and coeffs (array([float]))</span>
+<span class="c1"># shci_data = (dets, coeffs)</span>
+<span class="n">wf_shci</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.import_state.html#pennylane.qchem.import_state" title="pennylane.qchem.import_state" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">import_state</span></a><span class="p">(</span><span class="n">shci_data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SHCI-based state vector</span><span class="se">\n</span><span class="si">{</span><span class="n">wf_shci</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SHCI-based<span class="w"> </span>state<span class="w"> </span>vector
+<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.2243<span class="w">  </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">     </span>-0.9745<span class="w">  </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.<span class="w">      </span><span class="m">0</span>.
+<span class="w">   </span><span class="m">0</span>.<span class="w">    </span><span class="o">]</span>
+</pre></div>
+</div>
+<p>The Dice output file prints determinants using symbols <code class="docutils literal notranslate"><span class="pre">0</span></code> (unoccupied orbital),
+<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> (orbital occupied with spin-up and spin-down electron, respectively),
+and <code class="docutils literal notranslate"><span class="pre">2</span></code> (doubly occupied orbital). These determinant outputs, and corresponding
+coefficients, should be extracted and arranged as <code class="docutils literal notranslate"><span class="pre">(list([str]),</span> <span class="pre">array(float]))</span></code>,
+where each string combines all the determinant symbols <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">2</span></code> for a single
+determinant with no spaces. For example, for the HF state we created in the DMRG section,
+the SHCI output should read <code class="docutils literal notranslate"><span class="pre">([[&quot;200&quot;]],</span> <span class="pre">np.array([1.]))</span></code></p>
+</div>
+</div>
+<div class="section" id="application-speed-up-vqe">
+<h2>Application: speed up VQE<a class="headerlink" href="#application-speed-up-vqe" title="Permalink to this headline">¶</a></h2>
+<p>Let us now demonstrate how the choice of a better initial state shortens the runtime
+of VQE for obtaining the ground-state energy of a molecule. As a first step, create our
+linear <span class="math notranslate nohighlight">\(\text{H}_3^+\)</span> molecule, a device, and a simple VQE circuit with single and double excitations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="nn">qml</span>
+<span class="kn">from</span> <span class="nn">pennylane</span> <span class="kn">import</span> <span class="n">qchem</span>
+
+<span class="c1"># generate the molecular Hamiltonian for H3+</span>
+<span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">]</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">geometry</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">R</span><span class="o">/</span><span class="mf">0.529</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">R</span><span class="o">/</span><span class="mf">0.529</span><span class="p">]])</span>
+
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.Hamiltonian.html#pennylane.Hamiltonian" title="pennylane.Hamiltonian" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H2mol</span></a><span class="p">,</span> <span class="n">qubits</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.molecular_hamiltonian.html#pennylane.qchem.molecular_hamiltonian" title="pennylane.qchem.molecular_hamiltonian" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">qchem</span><span class="o">.</span><span class="n">molecular_hamiltonian</span></a><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">geometry</span></a><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">wires</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">qubits</span><span class="p">))</span>
+<span class="n">dev</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.device.html#pennylane.device" title="pennylane.device" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">&quot;default.qubit&quot;</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+
+<span class="c1"># create all possible excitations in H3+</span>
+<span class="n">singles</span><span class="p">,</span> <span class="n">doubles</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.qchem.excitations.html#pennylane.qchem.excitations" title="pennylane.qchem.excitations" class="sphx-glr-backref-module-pennylane-qchem sphx-glr-backref-type-py-function"><span class="n">qchem</span><span class="o">.</span><span class="n">excitations</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">qubits</span><span class="p">)</span>
+<span class="n">excitations</span> <span class="o">=</span> <span class="n">singles</span> <span class="o">+</span> <span class="n">doubles</span>
+</pre></div>
+</div>
+<p>Now let’s run VQE with the Hartree-Fock initial state. We first build the VQE circuit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@qml</span><span class="o">.</span><span class="n">qnode</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">circuit_VQE</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <span class="n">initial_state</span><span class="p">):</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.StatePrep.html#pennylane.StatePrep" title="pennylane.StatePrep" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">StatePrep</span></a><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="n">wires</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">excitation</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">excitations</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">excitation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.DoubleExcitation.html#pennylane.DoubleExcitation" title="pennylane.DoubleExcitation" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">DoubleExcitation</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="n">excitation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.SingleExcitation.html#pennylane.SingleExcitation" title="pennylane.SingleExcitation" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">SingleExcitation</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">wires</span><span class="o">=</span><span class="n">excitation</span><span class="p">)</span>
+    <span class="k">return</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.expval.html#pennylane.expval" title="pennylane.expval" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">expval</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.Hamiltonian.html#pennylane.Hamiltonian" title="pennylane.Hamiltonian" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H2mol</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we create the VQE optimizer, initialize the variational parameters and run the VQE optimization.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer" title="pennylane.GradientDescentOptimizer" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">opt</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer" title="pennylane.GradientDescentOptimizer" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span></a><span class="p">(</span><span class="n">stepsize</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">excitations</span><span class="p">)),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a><span class="p">,</span> <span class="n">iteration</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">results_hf</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># run the VQE optimization loop until convergence threshold is reached</span>
+<span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prev_energy</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer.step_and_cost" title="pennylane.GradientDescentOptimizer.step_and_cost" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-method"><span class="n">opt</span><span class="o">.</span><span class="n">step_and_cost</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">circuit_VQE</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_hf</span></a><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">circuit_VQE</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_hf</span></a><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a> <span class="o">-</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prev_energy</span></a>
+    <span class="n">results_hf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_hf</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_hf</span><span class="p">)</span><span class="si">}</span><span class="s2">,  Energy = </span><span class="si">{</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> Ha&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting with HF state took </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_hf</span><span class="p">)</span><span class="si">}</span><span class="s2"> iterations until convergence.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Step = 5,  Energy = -1.173803 Ha
+Step = 10,  Energy = -1.179865 Ha
+Step = 15,  Energy = -1.181626 Ha
+Step = 20,  Energy = -1.182239 Ha
+Step = 25,  Energy = -1.182461 Ha
+Step = 30,  Energy = -1.182543 Ha
+Starting with HF state took 31 iterations until convergence.
+</pre></div>
+</div>
+<p>And compare with how things go when you run it with the CISD initial state:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">excitations</span><span class="p">)),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a><span class="p">,</span> <span class="n">iteration</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">results_cisd</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prev_energy</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.GradientDescentOptimizer.html#pennylane.GradientDescentOptimizer.step_and_cost" title="pennylane.GradientDescentOptimizer.step_and_cost" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-method"><span class="n">opt</span><span class="o">.</span><span class="n">step_and_cost</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">circuit_VQE</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span></a><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">circuit_VQE</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">theta</span></a><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span></a><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">delta_E</span></a> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a> <span class="o">-</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prev_energy</span></a>
+    <span class="n">results_cisd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_cisd</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_cisd</span><span class="p">)</span><span class="si">}</span><span class="s2">,  Energy = </span><span class="si">{</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_energy</span></a><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> Ha&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting with CISD state took </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_cisd</span><span class="p">)</span><span class="si">}</span><span class="s2"> iterations until convergence.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Step = 5,  Energy = -1.181365 Ha
+Step = 10,  Energy = -1.182433 Ha
+Step = 15,  Energy = -1.182565 Ha
+Starting with CISD state took 16 iterations until convergence.
+</pre></div>
+</div>
+<p>Let’s visualize the comparison between the two initial states, and see that indeed
+we get to the ground state much faster by starting with the CISD state.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results_hf</span><span class="p">)),</span> <span class="n">results_hf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;wf_hf&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results_cisd</span><span class="p">)),</span> <span class="n">results_cisd</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;wf_cisd&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Energy, Ha&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_tutorial_initial_state_preparation_001.png" srcset="../_images/sphx_glr_tutorial_initial_state_preparation_001.png" alt="tutorial initial state preparation" class = "sphx-glr-single-img"/><p>Indeed, the CISD state significantly shortens the VQE runtime.</p>
+<p>It is sometimes possible to foresee the extent of this speed-up of a particular initial state
+by computing its overlap with the ground state–a traditional metric of success for initial
+states in quantum algorithms. Because in our examples the states are regular arrays, computing an
+overlap between different states is as easy as computing a dot product</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_hf</span></a><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_ccsd</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_hf</span></a><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_cisd</span></a><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.numpy.tensor.html#pennylane.numpy.tensor" title="pennylane.numpy.tensor" class="sphx-glr-backref-module-pennylane-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_ccsd</span></a><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9745302156335064
+0.9745302156318718
+0.9999999999999999
+</pre></div>
+</div>
+<p>In this particular case of <span class="math notranslate nohighlight">\(\text{H}_3^+\)</span>, even CISD gives the exact wavefunction, hence both overlaps
+with the HF state are identical. In more correlated molecules, overlaps will show that the more
+multireference methods DMRG and SHCI are farther away from the Hartree-Fock state,
+allowing them to perform better (you can check this by printing the overlaps with
+DMRG and SHCI in a more correlated molecule). If a ground state in such a case was known,
+the overlap to it could tell us directly the quality of the initial state.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>This demo shows how to import initial states from outputs of traditional quantum chemistry methods
+for use in PennyLane. We showcased simple workflows for how to run
+a variety of state-of-the-art post-Hartree-Fock methods, from libraries such as
+<a class="reference external" href="https://github.com/pyscf/pyscf">PySCF</a>,
+<a class="reference external" href="https://github.com/block-hczhai/block2-preview">Block2</a> and
+<a class="reference external" href="https://github.com/sanshar/Dice">Dice</a>, to generate outputs that can then be
+converted to PennyLane’s state vector format with a single line of code. With these
+initial states, we use the example of VQE to demonstrate how a better choice
+of initial state can lead to improved algorithmic performance. For the molecule
+used in our example, the CISD state was sufficient: however, in more correlated
+molecules, DMRG and SHCI initial states typically provide the best speed-ups.</p>
+</div>
+<div class="section" id="about-the-author">
+<h2>About the author<a class="headerlink" href="#about-the-author" title="Permalink to this headline">¶</a></h2>
+<div class="bio" >
+    <div class="photo" >
+        <img class="photo__img" src="../_static/authors/stepan_fomichev.jpg" alt="Stepan Fomichev" >
+    </div>
+    <div class="bio-text">
+        <h4 class="bio-text__author-name">Stepan Fomichev</h4>
+        <p class="bio-text__author-description">Stepan Fomichev is a quantum scientist working at Xanadu. His background is in condensed matter physics, with a focus on lattice vibrations and electron-phonon coupling. As part of the Algorithms team, he focuses on researching and developing prospective applications for quantum algorithms.</p>
+    </div>
+</div><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.724 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-demos-tutorial-initial-state-preparation-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/00cba8bd327f93fa6e0065b863a7ad95/tutorial_initial_state_preparation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tutorial_initial_state_preparation.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/a8b164341b0af51d961ebfe1ea00df01/tutorial_initial_state_preparation.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_initial_state_preparation.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    <script type="text/javascript">
+        // This script ensures that the active navbar entry switches
+        // from 'QML' to 'Demos' for any webpage within the demos/ directory,
+        // or for any of the demonstration landing pages
+        // (e.g., demos_optimization).
+        var pagename = document.location.href.match(/[^\/]+$/)[0];
+        var dir = document.URL.substr(0,document.URL.lastIndexOf('/')).match(/[^\/]+$/)[0];
+
+        if (pagename.includes("demos") || pagename.includes("demonstrations") || dir.includes("demos")) {
+
+            $(".nav-item.active").removeClass("active");
+            var demos_link = $('.navbar-nav a').filter(function(index) { return $(this).text() === "Demos"; })[0]
+            $(demos_link).parent().addClass("active");
+        }
+    </script>
+
+              <div id="bottom-dl" class="xanadu-call-to-action-links">
+                <div id="tutorial-type">demos/tutorial_initial_state_preparation</div>
+                <div class="download-python-link">
+                  <i class="fab fa-python"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Python script</div>
+                </div>
+                <div class="download-notebook-link">
+                  <i class="fas fa-download"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Notebook</div>
+                </div>
+                <div class="github-view-link">
+                  <i class="fab fa-github"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">View on GitHub</div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        
+<div class="localtoc-container nano has-scrollbar">
+  <div class="nano-content">
+    <div id="localtoc">
+        
+          <h3>Contents</h3>
+          <!-- Display the ToC for the current document if it is not empty. -->
+          <ul class='current'>
+<li class='current'><a class="reference internal" href="#">Initial state preparation for quantum chemistry</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#importing-initial-states">Importing initial states</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#cisd-states">CISD states</a></li>
+<li class='current'><a class="reference internal" href="#ccsd-states">CCSD states</a></li>
+<li class='current'><a class="reference internal" href="#dmrg-states">DMRG states</a></li>
+<li class='current'><a class="reference internal" href="#shci-states">SHCI states</a></li>
+</ul>
+</li>
+<li class='current'><a class="reference internal" href="#application-speed-up-vqe">Application: speed up VQE</a></li>
+<li class='current'><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class='current'><a class="reference internal" href="#about-the-author">About the author</a></li>
+</ul>
+</li>
+</ul>
+
+        
+    </div>
+
+    <div class="xanadu-call-to-action-links">
+        <h3>Downloads</h3>
+        <div id="tutorial-type">demos/tutorial_initial_state_preparation</div>
+        <div class="download-python-link">
+            <i class="fab fa-python"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Python script</div>
+        </div>
+        <div class="download-notebook-link">
+            <i class="fas fa-download"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Notebook</div>
+        </div>
+        <div class="github-view-link">
+            <i class="fab fa-github"></i>&nbsp;
+            <div class="call-to-action-desktop-view">View on GitHub</div>
+        </div>
+    </div>
+    <div id="related-tutorials" class="mt-4">
+      <h3> Related</h3>
+    </div>
+  </div>
+</div>
+
+
+    
+          <div class="up-button">
+            
+              
+                <a href="../demos_quantum-chemistry.html"><i class="fas fa-angle-double-left"></i></a>
+              
+            
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../demos_optimization.html" title="Optimization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial_resource_estimation.html" title="Resource estimation for quantum chemistry"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_quantum-chemistry.html" >Quantum Chemistry</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Initial state preparation for quantum chemistry</a></li> 
+      </ul>
+    </div>
+  <script type="text/javascript">
+    $("#mobile-toggle").click(function () {
+      $("#left-column").slideToggle("slow");
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- MathJax -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  <!-- NanoScroller -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+  <!-- Syntax Highlighting -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript">
+    $("a.reference.internal").each(function(){
+      var link = $(this).attr("href");
+
+      var hash = link.split("#")[1];
+      var page = link.split("#")[0].split("/").slice(-1)[0].replace(".html", "");
+
+      if (hash == page) {
+        $(this).attr("href", link.split("#")[0]);
+      }
+    });
+
+    $(".document > .section").removeClass("section");
+    $("h1 ~ .section").removeClass("section");
+    $(".localtoc-container .nano-content").css("height", $("#content").height());
+    $(".localtoc-container").css("height", $("#content").height());
+    $(".nano").nanoScroller();
+  </script>
+
+  <script type="text/javascript">
+      $(window).scroll(function(){
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < 342) {
+          $(".localtoc-container").css("height", "calc(100% - " + (342 - scrollBottom) + "px)");
+          $(".localtoc-container .nano-content").css("height", "calc(100% - 119px)");
+        }
+      });
+  </script>
+
+  <script type="text/javascript">
+    if ($(".current").length) {
+      var target = $(".current")[0]
+      var rect = target.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight) {
+          $(".nano").nanoScroller({ scrollTo: $(".current") });
+      } else {
+          $(".nano").nanoScroller({ scrollTop: 0 });
+      }
+    }
+    $(document).ready(function () {
+        $(".css-transitions-only-after-page-load").each(function (index, element) {
+            setTimeout(function () { $(element).removeClass("css-transitions-only-after-page-load") }, 10);
+        });
+        if (window.location.hash) {
+          var target = $("[id='" + window.location.hash.substr(1) + "']");
+          if (target.closest(".collapse").length) {
+            target.closest(".collapse").addClass("show");
+            target.closest(".collapse").prev().find(".rotate").addClass("up");
+          }
+        }
+    });
+  </script>
+
+    <script type="text/javascript">
+    var downloadNote = $(".sphx-glr-download-link-note.admonition.note");
+    if (downloadNote.length >= 1) {
+      var tutorialUrlArray = $("#tutorial-type").text().split('/');
+
+      if (tutorialUrlArray[0] == "demos") {
+        tutorialUrlArray[0] = "demonstrations";
+      }
+
+      var githubLink = "https://github.com/" + "PennyLaneAI/qml" + "/blob/master/" + tutorialUrlArray.join("/") + ".py",
+          pythonLink = $(".sphx-glr-download .reference.download")[0].href,
+          notebookLink = $(".sphx-glr-download .reference.download")[1].href;
+
+      $(".download-python-link").wrap("<a href=" + pythonLink + " data-behavior='call-to-action-event' data-response='Download Python script' download target='_blank'/>");
+      $(".download-notebook-link").wrap("<a href=" + notebookLink + " data-behavior='call-to-action-event' data-response='Download Notebook' download target='_blank'/>");
+      $(".github-view-link").wrap("<a href=" + githubLink + " data-behavior='call-to-action-event' data-response='View on Github' target='_blank'/>");
+      $("#right-column").addClass("page-shadow");
+    } else {
+      $(".xanadu-call-to-action-links").hide();
+      $("#bottom-dl").attr('style','display: none !important');
+    }
+    </script>
+
+    <script type="text/javascript">
+      function makeUL(urls, text) {
+          var list = document.createElement('ul');
+
+          for (var i = 0; i < urls.length; i++) {
+              var item = document.createElement('li');
+              var a = document.createElement('a');
+              var linkText = document.createTextNode(text[i]);
+              a.appendChild(linkText);
+              a.href = urls[i];
+              item.appendChild(a);
+              list.appendChild(item);
+          }
+          return list;
+      }
+
+      if (typeof related_tutorials !== 'undefined') {
+          document.getElementById('related-tutorials').appendChild(makeUL(related_tutorials, related_tutorials_titles));
+          $("#related-tutorials ul li a").append(' <i class="fas fa-angle-double-right" style="font-size: smaller;"></i>')
+          $("#related-tutorials").show();
+
+    } else {
+          $("#related-tutorials").hide();
+    }
+    </script>
+
+  <!-- Account for MathJax when navigating to anchor tags. -->
+  <script type="text/javascript">
+    function scrollToElement(e) {
+      // Scrolls to the given element, taking into account the navbar.
+      MathJax.Hub.Queue(function() {
+        // The following MUST be done asynchronously to take effect.
+        setTimeout(function() {
+          const navbar = document.querySelector("nav.navbar");
+          const navbarHeight = navbar ? navbar.offsetHeight : 0;
+          const scrollToY = e.offsetTop + e.offsetParent.offsetTop - navbarHeight;
+          window.scrollTo(0, scrollToY);
+        }, 0);
+      });
+    }
+
+    function scrollToFragment(fragment) {
+      // Scrolls to the position of the given URL fragment (which includes the "#").
+      const elementID = fragment.replace(".", "\\.");
+      if (elementID !== "") {
+        const element = document.querySelector(elementID);
+        if (element !== null) {
+          scrollToElement(element);
+        }
+      }
+    }
+
+    $(document).ready(() => {
+      scrollToFragment(window.location.hash);
+      window.addEventListener("popstate", (_) => scrollToFragment(document.location.hash), false);
+    });
+  </script>
+
+  <!-- Hide the rendering of :orphan: metadata. -->
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const elements = document.getElementsByClassName("field-odd");
+      for (const element of elements) {
+          if (element.innerHTML.trim() === "orphan") {
+            element.style.display = "none";
+          }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    jQuery.noConflict(true);
+  </script>
+
+  
+
+<footer class="page-footer text-md-left pt-4">
+
+  <hr class="pb-0 mb-0">
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+
+      
+      <!-- About -->
+      <div class="col-md-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <p>        PennyLane is an open-source software framework for quantum
+        machine learning, quantum chemistry, and quantum computing, 
+        with the ability to run on all hardware.
+        Maintained with ❤️ by Xanadu.
+        </p>
+      </div>
+      
+
+      <!-- Links -->
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://pennylane.ai/">Home</a></li>
+          
+          <li><a href="https://pennylane.ai/qml">Learn</a></li>
+          
+          <li><a href="https://pennylane.ai/qml/demonstrations.html">Demonstrations</a></li>
+          
+          <li><a href="https://docs.pennylane.ai/">Documentation</a></li>
+          
+          <li><a href="https://github.com/PennyLaneAI/pennylane">GitHub</a></li>
+          
+          <li><a href="https://twitter.com/pennylaneai">Twitter</a></li>
+          
+          <li><a href="https://pennylane.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">Xanadu</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://xanadu.ai/">Home</a></li>
+          
+          <li><a href="https://xanadu.ai/about/">About</a></li>
+          
+          <li><a href="https://xanadu.ai/photonics">Hardware</a></li>
+          
+          <li><a href="https://xanadu.ai/careers/">Careers</a></li>
+          
+          <li><a href="https://cloud.xanadu.ai">Cloud</a></li>
+          
+          <li><a href="https://discuss.pennylane.ai/">Forum</a></li>
+          
+          <li><a href="https://xanadu.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+  <hr>
+
+  <!-- Social -->
+  <div class="social-section text-center">
+      <ul class="list-unstyled list-inline mb-0">
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://twitter.com/PennyLaneAI"><i class="fab fa-twitter"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://github.com/PennyLaneAI/pennylane"><i class="fab fa-github"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://linkedin.com/company/xanaduai/"><i class="fab fa-linkedin-in"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://discuss.pennylane.ai"><i class="fab fa-discourse"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://xanadu-quantum.slack.com/join/shared_invite/zt-nkwn25v9-H4hituCb_PUj4idG0MhSug#/shared-invite/email"><i class="fab fa-slack"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://pennylane.ai/blog/"><i class="fas fa-rss"> </i></a></li>
+          
+      </ul>
+      
+        
+          <a href="https://xanadu.us17.list-manage.com/subscribe?u=725f07a1d1a4337416c3129fd&id=294b062630" style="font-size: initial;">
+            Stay updated with our newsletter
+          </a>
+        
+      
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-3 mt-0 text-center">
+      <div class="container-fluid">
+            Copyright &copy; 2022, Xanadu Quantum Technologies, Inc.
+
+        
+          <br>
+          TensorFlow, the TensorFlow logo, and any related marks are trademarks of Google Inc.
+        
+      </div>
+  </div>
+</footer>
+  </body>
+</html>

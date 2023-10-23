@@ -1,0 +1,1274 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta content="Learn interactively how we can view circuits as Fourier series." property="og:description" />
+<meta content="https://pennylane.ai/qml/_images/thumbnail_tutorial_Fourier.png" property="og:image" />
+
+  <link rel="icon" type="image/x-icon" href="../_static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../_static/favicon.ico">
+  
+
+
+  <meta property="og:title" content="Circuits as Fourier series &#8212; PennyLane">
+  <meta property="og:url" content="https://pennylane.ai/qml/demos/circuits_as_fourier_series.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  
+  
+  <meta content="Learn interactively how we can view circuits as Fourier series." property="og:description" />
+  
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.14/css/mdb.min.css">
+  <!-- NanoScroller -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/css/nanoscroller.min.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/tomorrow-night.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       "HTML-CSS": { scale: 90, linebreaks: { automatic: true } },
+       TeX: {
+         Macros: {
+           pr : ['|\#1\\rangle\\langle\#1|',1],
+           ket: ['\\left| \#1\\right\\rangle',1],
+           bra: ['\\left\\langle \#1\\right|',1],
+           xket: ['\\left| \#1\\right\\rangle_x',1],
+           xbra: ['\\left\\langle \#1\\right|_x',1],
+           braket: ['\\langle \#1 \\rangle',1],
+           braketD: ['\\langle \#1 \\mid \#2 \\rangle',2],
+           braketT: ['\\langle \#1 \\mid \#2 \\mid \#3 \\rangle',3],
+           ketbra: ['| #1 \\rangle \\langle #2 |',2],
+           hc: ['\\text{h.c.}',0],
+           cc: ['\\text{c.c.}',0],
+           h: ['\\hat',0],
+           nn: ['\\nonumber',0],
+           di: ['\\frac{d}{d \#1}',1],
+           uu: ['\\mathcal{U}',0],
+           inn: ['\\text{in}',0],
+           out: ['\\text{out}',0],
+           vac: ['\\text{vac}',0],
+           I: ['\\hat{\\mathbf{1}}',0],
+           x: ['\\hat{x}',0],
+           p: ['\\hat{p}',0],
+           a: ['\\hat{a}',0],
+           ad: ['\\hat{a}^\\dagger',0],
+           n: ['\\hat{n}',0],
+           nbar: ['\\overline{n}',0],
+           sech: ['\\mathrm{sech~}',0],
+           tanh: ['\\mathrm{tanh~}',0],
+           re: ['\\text{Re}',0],
+           im: ['\\text{Im}',0],
+           tr: ['\\mathrm{Tr} #1',1],
+           sign: ['\\text{sign}',0],
+           overlr: ['\\overset\\leftrightarrow{\#1}',1],
+           overl: ['\\overset\leftarrow{\#1}',1],
+           overr: ['\\overset\rightarrow{\#1}',1],
+           avg: ['\\left< \#1 \\right>',1],
+           slashed: ['\\cancel{\#1}',1],
+           bold: ['\\boldsymbol{\#1}',1],
+           d: ['\\mathrm d',0],
+           expect: ["\\langle #1 \\rangle",1],
+           pde: ["\\frac{\\partial}{\\partial \#1}",1],
+           R: ["\\mathbb{R}",0],
+           C: ["\\mathbb{C}",0],
+           Ad: ["\\text{Ad}",0],
+           Var: ["\\text{Var}",0],
+           bx: ["\\mathbf{x}", 0],
+           bm: ["\\boldsymbol{\#1}",1],
+           haf: ["\\mathrm{haf}",0],
+           lhaf: ["\\mathrm{lhaf}",0]
+         }
+       }
+     });
+     </script>
+
+  <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130507810-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130507810-1');
+      </script>
+  
+    <title>Circuits as Fourier series &#8212; PennyLane  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/xanadu.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/light-slider.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/hubs.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="canonical" href="https://pennylane.ai/qml/demos/circuits_as_fourier_series.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body><nav class="navbar navbar-expand-lg navbar-light white sticky-top">
+
+<!-- Logo and Title -->
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <a class="navbar-brand nav-link" href="https://pennylane.ai">
+    
+  <img class="pr-1" src=" ../_static/logo.png" width="28px"></img>
+  
+    <img id="navbar-wordmark" src="../_static/pennylane.svg"></img>
+  
+  </a>
+
+
+  <!-- [Mobile] Collapse Button -->
+  <div class="row right">
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <!-- [Mobile] Collapsible Content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+
+    <!-- Links on the Left -->
+    <ul class="navbar-nav mr-auto">
+      
+        
+          
+            <li class="nav-item active">
+              <a class="nav-link" href="https://pennylane.ai/qml/">
+                
+  
+    Learn
+  
+
+              </a>
+              <span class="sr-only">(current)</span>
+            </li>
+          
+
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/qml/demonstrations.html">
+                
+  
+    Demos
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/install.html">
+                
+  
+    Install
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/plugins.html">
+                
+  
+    Plugins
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://docs.pennylane.ai">
+                
+  
+    Documentation
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/blog/">
+                
+  
+    Blog
+  
+
+            </a>
+          </li>
+        
+      
+    </ul>
+
+    <!-- Links on the Right -->
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://pennylane.ai/faq.html">
+            <i class="fas fa-question pr-1"></i> FAQ
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://discuss.pennylane.ai/">
+            <i class="fab fa-discourse pr-1"></i> Support
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/PennyLaneAI/pennylane">
+            <i class="fab fa-github pr-1"></i> GitHub
+          </a>
+        </li>
+      
+
+    </ul>
+  </div>
+
+</nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Circuits as Fourier series</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+        <div id="content">
+          <div id="right-column">
+            
+            
+
+            <div class="document clearer body">
+              
+    <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-demos-circuits-as-fourier-series-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="circuits-as-fourier-series">
+<span id="sphx-glr-demos-circuits-as-fourier-series-py"></span><h1>Circuits as Fourier series<a class="headerlink" href="#circuits-as-fourier-series" title="Permalink to this headline">¶</a></h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script><p>In this demo, we’re going to give an interactive, code-free introduction to the idea
+of quantum circuits as Fourier series. We’ll also discuss one of the main applications, called the
+parameter-shift rule. Concepts will be embodied in visualizations you can play with!
+We’ll assume some familiarity with the basics of quantum circuits.
+The last part of the demonstration is more advanced, and intended to give researchers a
+different way to think of the material. But beginners are also welcome!</p>
+<div class="section" id="single-qubit-gates">
+<h2>Single-qubit gates<a class="headerlink" href="#single-qubit-gates" title="Permalink to this headline">¶</a></h2>
+<p>Consider a single-qubit Hermitian operator <span class="math notranslate nohighlight">\(G\)</span>. It acts on a two-dimensional
+space, and therefore has two eigenvalues: <span class="math notranslate nohighlight">\(\kappa \pm \gamma\)</span>,
+where <span class="math notranslate nohighlight">\(\kappa\)</span> is the average and <span class="math notranslate nohighlight">\(2\gamma\)</span> the difference between them. If
+we exponentiate <span class="math notranslate nohighlight">\(G\)</span>, with a parameter <span class="math notranslate nohighlight">\(\theta\)</span>, we obtain a unitary gate:</p>
+<div class="math notranslate nohighlight">
+\[U(\theta) = e^{i\theta G}.\]</div>
+<p>Up to an overall phase of <span class="math notranslate nohighlight">\(e^{i\theta\kappa}\)</span>, which we can ignore because it is
+not measurable, the unitary <span class="math notranslate nohighlight">\(U\)</span> has eigenvalues <span class="math notranslate nohighlight">\(e^
+{\pm i \theta\gamma}\)</span>. In the eigenbasis (i.e., the basis of eigenvectors
+of <span class="math notranslate nohighlight">\(G\)</span>, or equivalently <span class="math notranslate nohighlight">\(U\)</span>), it is diagonal. We will draw this
+diagonal matrix as a magenta box:</p>
+<script src="../_static/demos/circuits_as_fourier_series/sketch.js"></script>
+<figure>
+  <center>
+  <div id="sketch0_1"></div>
+  </center>
+</figure><p>We will work on the eigenbasis of <span class="math notranslate nohighlight">\(U\)</span> from now on. This means that a column
+vector <span class="math notranslate nohighlight">\([1, 0]^T\)</span> is the eigenvector associated with <span class="math notranslate nohighlight">\(-\gamma\)</span>, and
+<span class="math notranslate nohighlight">\([0, 1]^T\)</span> is associated with <span class="math notranslate nohighlight">\(+\gamma\)</span>:</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click the image to toggle between eigenvectors.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch0_2"></div>
+  </center>
+</figure><p>We’ve written the matrix as a box to suggest a different way to think of it:
+a <em>gate</em> in a quantum circuit. Instead of column vectors, we can use
+bra-ket notation, with basis states <span class="math notranslate nohighlight">\(\vert0\rangle = [1, 0]^T\)</span> and
+<span class="math notranslate nohighlight">\(\vert 1\rangle = [0, 1]^T\)</span>. We will also add some horizontal lines through the
+gate to suggest that the states are “piped” through and pick up the
+corresponding phase.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click to toggle between basis states <span class="math notranslate nohighlight">\(\vert 0\rangle\)</span>
+and <span class="math notranslate nohighlight">\(\vert 1\rangle\)</span>. While the mouse is in the magenta
+box, its vertical position controls <span class="math notranslate nohighlight">\(\gamma\)</span>, with the top of
+the box corresponding to high frequencies, and the bottom of the box
+to low frequencies.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch1"></div>
+  </center>
+</figure></div>
+<div class="section" id="frequency-components">
+<h2>Frequency components<a class="headerlink" href="#frequency-components" title="Permalink to this headline">¶</a></h2>
+<p>You may wonder why we have introduced the parameter <span class="math notranslate nohighlight">\(\theta\)</span>.
+The idea is that, if we have <span class="math notranslate nohighlight">\(U(\theta)\)</span> in our circuit, we can
+treat <span class="math notranslate nohighlight">\(\theta\)</span> as a parameter we can tune to improve the results of
+the circuit for, say, approximating a state of interest.
+Viewed as functions of this tunable parameter <span class="math notranslate nohighlight">\(\theta\)</span>, the purples
+phases are <em>exponentials</em> of frequency <span class="math notranslate nohighlight">\(\omega = \pm \gamma\)</span>.
+Below, we plot the real and imaginary parts of these frequencies.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click to toggle between basis states <span class="math notranslate nohighlight">\(\vert 0\rangle\)</span>
+and <span class="math notranslate nohighlight">\(\vert 1\rangle\)</span>. While the mouse is in the magenta
+box, its vertical position controls <span class="math notranslate nohighlight">\(\gamma\)</span>.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch2"></div>
+  </center>
+</figure><p>Usually, we start a wire in the <span class="math notranslate nohighlight">\(\vert 0\rangle\)</span> basis state. We
+can “split” this into a combination of <span class="math notranslate nohighlight">\(\vert 0\rangle\)</span>
+and <span class="math notranslate nohighlight">\(\vert1\rangle\)</span> by applying a gate <span class="math notranslate nohighlight">\(W\)</span>. We picture <span class="math notranslate nohighlight">\(W\)</span>
+as a blue gate below. The state
+<span class="math notranslate nohighlight">\(\vert\psi(\theta)\rangle =U(\theta)W\vert 0\rangle\)</span> will then be a superposition of
+<span class="math notranslate nohighlight">\(e^{-i\theta\gamma}\vert0\rangle\)</span> and
+<span class="math notranslate nohighlight">\(e^{+i\theta\gamma}\vert1\rangle\)</span>. Again, viewed as a function of
+<span class="math notranslate nohighlight">\(\theta\)</span>, it has both frequency components, storing them in the
+coefficient of the corresponding eigenstate.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Vertical mouse position in the blue box controls the relative weight
+of <span class="math notranslate nohighlight">\(\vert0\rangle\)</span> and <span class="math notranslate nohighlight">\(\vert 1\rangle\)</span>. Hovering  towards the
+top places the most weight on <span class="math notranslate nohighlight">\(\vert0\rangle\)</span>, and towards the bottom
+on <span class="math notranslate nohighlight">\(\vert1\rangle\)</span>.
+Clicking the magenta box toggles between them, with vertical mouse position controlling <span class="math notranslate nohighlight">\(\gamma\)</span>.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch3" style></div>
+  </center>
+</figure><p>Once we’ve prepared a state <span class="math notranslate nohighlight">\(\vert\psi(\theta)\rangle\)</span>, we can
+measure it with some Hermitian operator <span class="math notranslate nohighlight">\(M\)</span>. In the context of variational circuits, the result of
+a measurement can be used to optimize the parameter <span class="math notranslate nohighlight">\(\theta\)</span>.
+To this end, let’s define the expectation value as a function of
+<span class="math notranslate nohighlight">\(\theta\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[f(\theta) = \langle \psi(\theta)\vert M \vert\psi(\theta)\rangle.\]</div>
+<p>We represent the measurement <span class="math notranslate nohighlight">\(M\)</span> as a yellow box, sandwiched between a
+circuit on the left preparing the ket <span class="math notranslate nohighlight">\(\vert\psi(\theta)\rangle\)</span> and
+an adjoint circuit preparing the bra <span class="math notranslate nohighlight">\(\langle \psi(\theta)\vert\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that taking the adjoint swaps <span class="math notranslate nohighlight">\(\pm\gamma\)</span>, and the order of elements
+in the circuit is inverted compared to the expression for
+<span class="math notranslate nohighlight">\(f(\theta)\)</span>.</p>
+</div>
+<p>We can expand the bra and ket in terms of frequency components
+<span class="math notranslate nohighlight">\(e^{\pm i\theta\gamma}\)</span>, so <span class="math notranslate nohighlight">\(f(\theta)\)</span> will be a sum of products of
+these terms. We show this below.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click on magenta boxes to toggle between frequency
+components contributing to <span class="math notranslate nohighlight">\(f(\theta)\)</span>. Vertical position in the
+yellow box controls the constant terms
+<span class="math notranslate nohighlight">\(\langle 0 \vert M \vert0\rangle\)</span> and
+<span class="math notranslate nohighlight">\(\langle 1 \vert M \vert 1\rangle\)</span>.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch4" style></div>
+  </center>
+</figure><p>To recap what we’ve learned so far: the ket <span class="math notranslate nohighlight">\(\vert\psi
+(\theta)\rangle\)</span> is a linear combination of the terms <span class="math notranslate nohighlight">\(e^
+{-i\theta\gamma}\vert0\rangle\)</span> and <span class="math notranslate nohighlight">\(e^
+{+i\theta\gamma}\vert1\rangle\)</span>. If we measure this state, the expectation
+value <span class="math notranslate nohighlight">\(f(\theta) = \langle\psi(\theta)\vert M\vert\psi
+(\theta)\rangle\)</span> is a linear combination of products of the frequency
+terms <span class="math notranslate nohighlight">\(e^{\pm i\theta\gamma}\)</span>. More formally, we can write</p>
+<div class="math notranslate nohighlight">
+\[f(\theta) = c_{(-2)} e^{-i2\gamma\theta} + c_{(0)} + c_{(+2)}
+e^{+i2\gamma\theta}\]</div>
+<p>for some coefficients <span class="math notranslate nohighlight">\(c_{(-2)}, c_{(0)}, c_{(+2)}\)</span>. General expressions of
+this form—sums of exponential terms with evenly spaced frequencies—are
+called <em>Fourier series</em>. This turns out to be a useful way to look at
+parameterized circuits!</p>
+</div>
+<div class="section" id="larger-circuits">
+<h2>Larger circuits<a class="headerlink" href="#larger-circuits" title="Permalink to this headline">¶</a></h2>
+<p>We can embed this structure, with a single occurrence of <span class="math notranslate nohighlight">\(U
+(\theta)\)</span>, into a larger circuit. Instead of a linear combination
+of <span class="math notranslate nohighlight">\(\vert0\rangle\)</span> and <span class="math notranslate nohighlight">\(\vert 1\rangle\)</span>, it will be a linear
+combination of the form</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \vert 0\rangle \otimes \vert \psi_0\rangle + \alpha_1 \vert
+1\rangle \otimes\vert \psi_1\rangle,\]</div>
+<p>for some states <span class="math notranslate nohighlight">\(\vert \psi_0\rangle\)</span> and <span class="math notranslate nohighlight">\(\vert \psi_1\rangle\)</span> on
+the rest of the circuit, up to a reordering of wires. (This follows by
+factorizing with respect to the tensor product.)</p>
+<p>After applying <span class="math notranslate nohighlight">\(U(\theta)\)</span>, the overall state will become</p>
+<div class="math notranslate nohighlight">
+\[e^{-i\theta\gamma}\alpha_0 \vert 0\rangle \otimes\vert \psi_0\rangle + e^{+i\theta\gamma}\alpha_1 \vert 1\rangle \otimes\vert \psi_1\rangle.\]</div>
+<p>Whatever subsequent gates we apply, as long as there is only one occurrence
+of <span class="math notranslate nohighlight">\(U(\theta)\)</span>, this expansion in frequencies <span class="math notranslate nohighlight">\(e^
+{\pm i\theta\gamma}\)</span> is the same. We illustrate how a single copy of <span class="math notranslate nohighlight">\(U
+(\theta)\)</span> acts on the larger circuit below.</p>
+<figure>
+  <center>
+  <div id="sketch5" style></div>
+  </center>
+</figure><p>If there are multiple copies of <span class="math notranslate nohighlight">\(U(\theta)\)</span> in the circuit, we simply
+get more frequencies. Each box will multiply existing coefficients
+by <span class="math notranslate nohighlight">\(e^{-i\gamma\theta}\)</span> or <span class="math notranslate nohighlight">\(e^{+i\gamma\theta}\)</span>, depending on the
+state it encounters. This will iteratively build up a state of the following
+form:</p>
+<div class="math notranslate nohighlight">
+\[\vert \psi(\theta)\rangle = \alpha_{0\cdots 00}e^{-in\gamma\theta}\vert
+\psi_{0\cdots 00}\rangle + \alpha_{0\cdots 01}e^{-i(n-2)\gamma\theta}\vert
+\psi_{0\cdots 01}\rangle + \cdots + \alpha_{1\cdots 11}e^{+in\gamma\theta}\vert
+\psi_{1\cdots 11}\rangle,\]</div>
+<p>where the first term corresponds to choosing <span class="math notranslate nohighlight">\(e^{-i\gamma \theta}\)</span> in
+each box, and the last term <span class="math notranslate nohighlight">\(e^{+i\gamma \theta}\)</span> in each box. Note
+that, for intermediate frequencies, many different choices yield the same
+final result! We illustrate for <span class="math notranslate nohighlight">\(n = 2\)</span> below, where the total state at
+the end of the circuit is</p>
+<div class="math notranslate nohighlight">
+\[\vert \psi(\theta)\rangle = \alpha_{00}e^{-i2\theta\gamma} \vert \psi_{00}\rangle + \alpha_{01}e^{i0\gamma}\vert
+\psi_{01}\rangle + \alpha_{10}e^{i0\gamma}\vert \psi_{10}\rangle + \alpha_{1}e^{+i2\theta\gamma} \vert \psi_{11}\rangle.\]</div>
+<p>Here, there are two ways to obtain a frequency of zero.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click on the magenta boxes terms to choose
+<span class="math notranslate nohighlight">\(e^{\pm i\gamma\theta}\)</span> in each box. The final frequency is shown on
+the right. Although we are placing the boxes in parallel, the result is the
+same for series.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch6" style></div>
+  </center>
+</figure><p>As usual, we can form the expectation value of a measurement
+<span class="math notranslate nohighlight">\(f(\theta) = \langle \psi(\theta)\vert M \vert \psi
+(\theta)\rangle\)</span>. This will be a linear combination of overlaps of the
+states above. For instance, when <span class="math notranslate nohighlight">\(n =2\)</span>, it will be built from
+overlaps of the states (including the associated phases)</p>
+<div class="math notranslate nohighlight">
+\[e^{-i2\theta\gamma}\vert \psi_{00}\rangle, \quad e^{i0\gamma}\vert \psi_{01}\rangle, \quad e^{i0\gamma}\vert
+\psi_{10}\rangle, \quad e^{+i2\theta\gamma}\vert \psi_{11}\rangle.\]</div>
+<p>Thus, the expectation is a Fourier series, with terms arising from
+all the different ways of combining these frequencies. For general <span class="math notranslate nohighlight">\(n\)</span>, this is</p>
+<div class="math notranslate nohighlight">
+\[f(\theta) = c_{(-2n)}e^{-2in\gamma\theta} +
+ \cdots + c_{(0)} + \cdots +
+ c_{(2n)}e^{2in\gamma\theta}.\]</div>
+<p>Below, we illustrate for <span class="math notranslate nohighlight">\(n = 2\)</span>, where the Fourier series consists
+of five terms:</p>
+<div class="math notranslate nohighlight">
+\[f(\theta) = c_{(-4)}e^{-4i\gamma\theta} + c_{(-2)}e^{-2i\gamma\theta} +
+c_{(0)} + c_{(+2)}e^{+2i\gamma\theta} +c_{(+4)}e^{+4i\gamma\theta}.\]</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click on the magenta boxes terms to choose
+<span class="math notranslate nohighlight">\(e^{\pm i\gamma\theta}\)</span> in each box, contributing to the final
+frequency. This frequency is shown below the circuit.</p>
+</div>
+<figure>
+  <center>
+  <div id="sketch7" style></div>
+  </center>
+</figure></div>
+<div class="section" id="coefficient-vectors">
+<h2>Coefficient vectors<a class="headerlink" href="#coefficient-vectors" title="Permalink to this headline">¶</a></h2>
+<p>So far, we’ve focused on the <span class="math notranslate nohighlight">\(\theta\)</span>-dependent “pure frequency” terms <span class="math notranslate nohighlight">\(e^{i\omega\theta\gamma}\)</span> appearing in the Fourier series.
+However, the <em>coefficients</em> <span class="math notranslate nohighlight">\(c_w\)</span> also have an important role
+to play.
+It turns out that, for a given set of frequencies in the Fourier
+series, the coefficients <em>uniquely</em> characterize <span class="math notranslate nohighlight">\(f(\theta)\)</span>.
+We’ll redo the <span class="math notranslate nohighlight">\(n = 2\)</span> example but highlight the coefficients instead;
+these depend on the structure of the circuit and the choice of
+measurement.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click on the magenta boxes terms to choose
+<span class="math notranslate nohighlight">\(e^{\pm i\gamma\theta}\)</span> in each box, contributing to the final
+frequency. The coefficient of this final frequency is shown below the circuit.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch8" style></div>
+    </center>
+</figure><p>The set of Fourier sums of fixed degree form a vector space, and the pure
+frequencies <span class="math notranslate nohighlight">\(e^{i\omega \theta\gamma}\)</span> are a <em>basis</em>. We can assemble
+these coefficients into a column vector,
+<span class="math notranslate nohighlight">\(\vec{c}_f\)</span>, which contains the same information as the
+function <span class="math notranslate nohighlight">\(f(\theta)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f(\theta) = c_{(-2n)} e^{-i2n\theta\gamma} + \cdots + c_{(+2n)} e^{+i2n\theta\gamma} \quad
+\Leftrightarrow \quad \vec{c}_f =
+\begin{bmatrix}
+c_{(-2n)} \\
+\vdots \\
+c_{(2n)}
+\end{bmatrix}.\end{split}\]</div>
+<p>If an operation
+on the function <span class="math notranslate nohighlight">\(f(\theta)\)</span> preserves the structure of the function,
+i.e., it only modifies the coefficients, then we can think of it as
+an operation on vectors instead! Our first example is
+differentiation. This simply pulls down a constant term from the
+exponent of each pure frequency:</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = (-i2n\gamma)c_{-2n} e^{-i2n\theta\gamma} + \cdots +
+(+i2n\gamma)c_{+2n} e^{+i2n\theta\gamma}.\]</div>
+<p>In terms of the coefficient vectors, however, it is just a diagonal
+matrix <span class="math notranslate nohighlight">\(D\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{c}_{f'} =
+\begin{bmatrix}
+(-i2n\gamma)c_{-2n} \\
+\vdots \\
+(+i2n\gamma)c_{2n}
+\end{bmatrix} =
+\begin{bmatrix}
+-i2n\gamma &amp; &amp; \\
+&amp; \ddots &amp; \\
+&amp;&amp; +i2n\gamma
+\end{bmatrix}
+\begin{bmatrix}
+c_{-2n} \\
+\vdots \\ c_{2n}
+\end{bmatrix} = D\vec{c}.\end{split}\]</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The derivative of the expectation
+<span class="math notranslate nohighlight">\(f(\theta)\)</span> as a coefficient vector. Click on the magenta boxes to
+choose terms contributing to the final frequency.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch9" style></div>
+    </center>
+</figure><p>Another particularly simple operation on <span class="math notranslate nohighlight">\(f(\theta)\)</span> is to
+shift the parameter <span class="math notranslate nohighlight">\(\theta\)</span> by some constant amount <span class="math notranslate nohighlight">\(s\)</span>, giving a new
+function <span class="math notranslate nohighlight">\(f_s(\theta) = f(\theta + s)\)</span>, also called a
+<em>parameter shift</em>. From index laws, this adds an exponential
+factor to each coefficient:</p>
+<div class="math notranslate nohighlight">
+\[f(\theta + s) = c_{(-2n)} e^{-i2n(\theta + s)\gamma} + \cdots +
+c_{(+2n)} e^{+i2n(\theta + s)\gamma} = e^{-i2ns\gamma}c_{(-2n)} e^{-i2n\theta\gamma} + \cdots
++ e^{+i2ns\gamma}c_{(+2n)} e^{+i2n\theta\gamma}.\]</div>
+<p>Once again, this can be viewed as a diagonal matrix <span class="math notranslate nohighlight">\(T_s\)</span>
+acting on the coefficient vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{c}_{f_s} =
+\begin{bmatrix}
+e^{-i2ns\gamma}c_{-2n} \\
+\vdots \\
+e^{+i2ns\gamma}c_{2n}
+\end{bmatrix} =
+\begin{bmatrix}
+e^{-i2ns\gamma} &amp; &amp; \\
+&amp; \ddots &amp; \\
+&amp;&amp; e^{+i2ns\gamma}
+\end{bmatrix}
+\begin{bmatrix}
+c_{-2n} \\
+\vdots \\ c_{2n}
+\end{bmatrix} = T_s\vec{c}.\end{split}\]</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The parameter shifted expectation
+<span class="math notranslate nohighlight">\(f(\theta + s)\)</span> as a coefficient vector. Click on the magenta boxes to
+choose terms contributing to the final frequency.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch10" style></div>
+    </center>
+</figure></div>
+<div class="section" id="the-two-term-parameter-shift-rule">
+<h2>The two-term parameter-shift rule<a class="headerlink" href="#the-two-term-parameter-shift-rule" title="Permalink to this headline">¶</a></h2>
+<p>Our original motivation for introducing <span class="math notranslate nohighlight">\(\theta\)</span> was to <em>optimize</em> the
+measurement result <span class="math notranslate nohighlight">\(f(\theta)\)</span>. If we can differentiate <span class="math notranslate nohighlight">\(f
+(\theta)\)</span>, we can use tools from classical machine learning such as <em>gradient
+descent</em>. The problem is that circuits are black boxes; all we can do is set
+some parameters, pull a lever, and out pops a measurement outcome. It’s a bit
+like a toaster. How do you differentiate a toaster?</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click the measurement button for toasty measurement outcomes.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch11" style></div>
+    </center>
+</figure><p>Luckily, the magic of Fourier series and coefficient vectors come to the
+rescue. The basic idea is to write the differentiation matrix <span class="math notranslate nohighlight">\(D\)</span> as a
+linear combination of shift matrices <span class="math notranslate nohighlight">\(T_s\)</span>. Although we can’t
+differentiate directly, we _can_ change parameters! Let’s illustrate with the
+simple example of <span class="math notranslate nohighlight">\(n = 1\)</span>. In this case, the matrices are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}D =
+\begin{bmatrix}-2i\gamma &amp;&amp; \\ &amp; 0 &amp; \\ &amp; &amp; +2i\gamma \end
+{bmatrix}, \quad T_s = \begin{bmatrix}e^{-2i\gamma s} &amp;&amp; \\ &amp;1&amp; \\ &amp;&amp; e^
+{+2i\gamma s} \end{bmatrix}.\end{split}\]</div>
+<p>It’s easy to check that for any <span class="math notranslate nohighlight">\(s\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[D = \frac{2\gamma}{\sin(\gamma s)}(T_s - T_{-s}).\]</div>
+<p>Translating back into statements about functions, we learn that</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = \frac{2\gamma}{\sin(\gamma s)}[f(\theta + s) - f
+(\theta - s)].\]</div>
+<p>This is called <em>two-term parameter-shift rule</em>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click anywhere for gratuitous toast.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch11_5" style></div>
+    </center>
+</figure><p>The two-term rule has a simple geometric interpretation. Changing
+<span class="math notranslate nohighlight">\(\theta\)</span> takes us around a circle of fixed radius
+<span class="math notranslate nohighlight">\(r = \vert c_{\pm2}\vert\)</span> at speed <span class="math notranslate nohighlight">\(\gamma/2\pi\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that parameter shifts add phases and don’t change <span class="math notranslate nohighlight">\(\vert c_
+{(\pm 2)}\vert\)</span>. The radius is given by either, since the reality of
+measurement outcomes implies <span class="math notranslate nohighlight">\(c_{(+2)} = \overline{c_{(-2)}}\)</span>.</p>
+</div>
+<p>The derivative <span class="math notranslate nohighlight">\(f'(\theta)\)</span> is a tangent vector of
+length <span class="math notranslate nohighlight">\(r\gamma\)</span>. We can choose Cartesian coordinates where this
+tangent vector is vertical, with components</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = (0, r\gamma).\]</div>
+<p>The parameter shifts <span class="math notranslate nohighlight">\(f(\theta \pm s)\)</span>, on the other hand, have
+components</p>
+<div class="math notranslate nohighlight">
+\[f(\theta \pm s) = (r \cos(\gamma s), \pm r\sin(\gamma s)).\]</div>
+<p>It follows immediately that</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = \frac{2\gamma}{\sin(\gamma s)} [f(\theta + s) - f(\theta - s)].\]</div>
+<p>We picture the geometry below. On the right, tangent to the circle,
+is <span class="math notranslate nohighlight">\(f'\)</span> as a coefficient vector in the <span class="math notranslate nohighlight">\(c_{\pm2}\)</span> plane. We
+display <span class="math notranslate nohighlight">\(f(\theta + s)\)</span> and <span class="math notranslate nohighlight">\(-f(\theta - s)\)</span> as light magenta
+lines. Their vector sum <span class="math notranslate nohighlight">\(\Delta f\)</span> is a dark magenta line.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Horizontal mouse position controls <span class="math notranslate nohighlight">\(s\)</span>.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch12" style></div>
+    </center>
+</figure></div>
+<div class="section" id="the-general-parameter-shift-rule">
+<h2>The general parameter-shift rule<a class="headerlink" href="#the-general-parameter-shift-rule" title="Permalink to this headline">¶</a></h2>
+<p>For <span class="math notranslate nohighlight">\(n &gt; 1\)</span>, parameter shift rules don’t have a simple geometric
+interpretation. The problem is that each pair of coefficients
+<span class="math notranslate nohighlight">\(c_{\pm \omega}\)</span> is associated with a circle governing two components of
+the coefficient vector. To find the derivative, we need to understand each
+pair of components separately, but parameter shifts <em>simultaneously</em> wind us
+around all the circles, at different speeds!   Geometrically speaking,
+putting all these circles together gives a
+<em>higher-dimensional donut</em>, which parameter shifts wind us
+around. This sounds complicated!</p>
+<p>It also looks complicated, as we illustrate for <span class="math notranslate nohighlight">\(n = 3\)</span> below. We
+set <span class="math notranslate nohighlight">\(\gamma = 1\)</span> so that, on the circle in the <span class="math notranslate nohighlight">\(c_{\pm
+\omega}\)</span> plane, we execute <span class="math notranslate nohighlight">\(\omega\)</span> revolutions for a single cycle
+of <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Horizontal mouse position controls <span class="math notranslate nohighlight">\(s\)</span>. For instance, if we place it in
+the middle of interval, <span class="math notranslate nohighlight">\(s = \pi\)</span>. This translates into an angle
+<span class="math notranslate nohighlight">\(\pm \pi\gamma\)</span> on the circle labelled <span class="math notranslate nohighlight">\(c_{(\pm \gamma)}\)</span>.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch13" style></div>
+    </center>
+</figure><p>Perhaps surprisingly, the coefficient vector perspective and a few tricks let
+us derive the general parameter-shift rule straighforwardly. We start with
+the observation that <span class="math notranslate nohighlight">\(f'(\theta)\)</span> has a coefficient vector
+with <span class="math notranslate nohighlight">\(2n\)</span> nonzero components, since the constant term always vanishes.
+Thus, <span class="math notranslate nohighlight">\(2n\)</span> linearly independent parameter shifts <span class="math notranslate nohighlight">\(f
+(\theta + s_k)\)</span> should be sufficient to reconstruct the derivative, with</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = \sum_{k=1}^{2n} \beta_k f(\theta + s_k) \tag{1}\]</div>
+<p>for some coefficients <span class="math notranslate nohighlight">\(\beta_k\)</span>. The problem is how to find the shifts
+and coefficients! We can invoke linear algebra to find coefficients, but only
+once we choose shifts, and it’s not obvious how to get them to be
+independent. We can see the problem for <span class="math notranslate nohighlight">\(n = 3\)</span>, where we choose six
+random shifts. Are they independent or not? It seems hard to tell. Is there a
+better approach?</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Horizontal mouse position controls <span class="math notranslate nohighlight">\(s\)</span>,
+which is now “quantized” with random shifts.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch14" style></div>
+    </center>
+</figure><p>Thankfully, there is! We can solve two problems at once by introducing
+an <em>inner product</em>, i.e., a way to find the scalar overlap of two vectors.
+This will let us identify orthogonal and hence independent
+shifts <span class="math notranslate nohighlight">\(s_k\)</span>. Since they are orthogonal, we can also easily determine
+the coefficients <span class="math notranslate nohighlight">\(\beta_k\)</span>. The idea is straightforward: since the
+matrices of interest are diagonal,</p>
+<div class="math notranslate nohighlight">
+\[D = \mbox{diag}(-2in\gamma, \ldots, +2in\gamma), \quad T_s = \mbox{diag}
+(e^{-2in\gamma s}, \ldots, e^{+2in\gamma s}),\]</div>
+<p>we can just pluck out the vector of diagonal entries and define a complex
+inner product in the usual way. Technically, this is the <a class="reference external" href="https://en.wikipedia.org/wiki/Frobenius_inner_product">Frobenius inner
+product</a> for
+matrices:</p>
+<div class="math notranslate nohighlight">
+\[\langle A, B\rangle = \mbox{Tr}[A^\dagger B].\]</div>
+<p>Consider two shifts <span class="math notranslate nohighlight">\(s, t \in [0, 2\pi/\gamma)\)</span>, and
+define <span class="math notranslate nohighlight">\(\omega = e^{2\pi i\gamma(t-s)}\)</span>. The inner product of diagonal
+shift matrices <span class="math notranslate nohighlight">\(T_s, T_t\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\langle T_s, T_t\rangle = \sum_{j=-n}^n \omega^j = \omega^{-n}\sum_{j=0}^
+{2n} \omega^j= \frac{\omega^{-n}(1 - \omega^{2n+1})}{1 - \omega} \tag{2}\]</div>
+<p>using the <a class="reference external" href="https://en.wikipedia.org/wiki/Geometric_series">geometric series</a>. Before moving on, let’s visualize what these inner
+products look like for <span class="math notranslate nohighlight">\(n = 3\)</span>. The expression (2) is
+a sum of phases, which we can add top-to-tail on the complex plane. We’ve
+added a big <span class="math notranslate nohighlight">\(\mathbb{C}\)</span> to distinguish this from other planes we’ve
+been looking at.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We display the inner product <span class="math notranslate nohighlight">\(\langle T_s, T_t\rangle\)</span> below.
+Horizontal mouse position controls <span class="math notranslate nohighlight">\(s\)</span>. The choice of <span class="math notranslate nohighlight">\(t\)</span>
+is “quantized” to the random shifts from above; click to the left to set
+it. The phases summed are light magenta, and the total is dark magenta.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch14_5" style></div>
+    </center>
+</figure><p>As expected, our random shifts are not orthogonal. But with (2) in hand, it’s
+easy to choose orthogonal vectors! We simply select our shifts <span class="math notranslate nohighlight">\(s_j\)</span> so
+that the numerator of (2) vanishes:</p>
+<div class="math notranslate nohighlight">
+\[\omega^{2n + 1} = e^{2\pi i \gamma(2n+1)(s_k - s_j)} = 1.\]</div>
+<p>This occurs if <span class="math notranslate nohighlight">\(\gamma(2n + 1)(s_k - s_j)\)</span> is always an integer. A
+natural choice is</p>
+<div class="math notranslate nohighlight">
+\[s_k = \frac{k}{\gamma(2n+1)},\]</div>
+<p>for <span class="math notranslate nohighlight">\(k = 1, \ldots, 2n\)</span>. In this case, we have the orthogonality
+relation</p>
+<div class="math notranslate nohighlight">
+\[\langle T_{s_k}, T_{s_k}\rangle = (2n+1)\delta_{jk}.\]</div>
+<p>Thus, spacing shifts equally around the <span class="math notranslate nohighlight">\(s\)</span> circle gives us an
+orthogonal set of shifts. We picture these equally spaced shifts, and check
+visually they are orthogonal, for <span class="math notranslate nohighlight">\(n=3\)</span> below. Select any of the
+equally spaced points, and you can see that its inner product with another of
+the equally spaced points vanishes.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Horizontal mouse position controls <span class="math notranslate nohighlight">\(s\)</span>.</p>
+</div>
+<figure>
+    <center>
+    <div id="sketch15" style></div>
+    </center>
+</figure><p>Orthogonality makes finding the coefficients <span class="math notranslate nohighlight">\(\beta_k\)</span> easy: we simply
+take the inner product between <span class="math notranslate nohighlight">\(T_{s_k}\)</span> and the left-hand side
+of (1), expressed in terms of the differentiation
+matrix <span class="math notranslate nohighlight">\(D\)</span>. This gives</p>
+<div class="math notranslate nohighlight">
+\[\begin{align*}
+\beta_k &amp; = \frac{2i\gamma}{2n+1}\sum_{j=-n}^n j \omega_k^j
+\end{align*}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\omega_k = e^{-2\pi i k/(2n+1)}\)</span>. This looks tricky, but we can
+start with a geometric series, <em>differentiate</em> with respect
+to <span class="math notranslate nohighlight">\(\omega\)</span>, and multiply by <span class="math notranslate nohighlight">\(\omega_k\)</span>, so we get what we want:</p>
+<div class="math notranslate nohighlight">
+\[\omega_k \partial_{\omega_k} \sum_{j=-n}^n \omega_k^j = \sum_
+ {j=-n}^n j\omega_k^j.\]</div>
+<p>We already computed the geometric series in
+(2). Plugging that back in, differentiating, and using the
+fact that <span class="math notranslate nohighlight">\(\omega_k^{2n+1} = 1\)</span>, we finally get</p>
+<div class="math notranslate nohighlight">
+\[\begin{align*}
+\beta_k &amp; =
+\frac{2i\gamma}{2n+1}\cdot\frac{\omega_k^{-n}(2n+1)(\omega_k -
+1)}{(\omega_k - 1)^2} = \frac{2 i\gamma \omega_k^{-n}}{\omega_k-1}.
+\end{align*}\]</div>
+<p>Putting these together with our shifts, we have our general parameter-shift
+rule:</p>
+<div class="math notranslate nohighlight">
+\[f'(\theta) = \sum_{k=1}^{2n}\frac{2 i\gamma \omega_k^{-n}}
+{\omega_k-1}f\left(\theta + \frac{k}{\gamma(2n+1)}\right).\]</div>
+<p>The approach outlined here only works when the frequencies in the
+problem are evenly spaced. However, there are ways to generalize
+further. Even without orthogonality, we can find
+independent shifts and solve the linear algebra problem
+(1) for the coefficients. Alternatively, we can use
+randomization to obtain shifts that are orthogonal on average, leading to
+the <em>stochastic parameter-shift rule</em>.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>We’ve seen that, by viewing a parameterized gate as an opportunity to
+choose eigenvalues, we naturally expand the expectations of the circuit
+as a Fourier series, that is, a sum of frequency terms, corresponding to
+the eigenvalues we chose along the way, with coefficients depending on the
+circuit. By thinking about the structure of coefficients themselves, we
+derived parameter-shift rules, allowing us to evaluate the derivative
+of a circuit as a linear combination of its expectation value at different
+parameter values. This is a key part of the machinery of performing
+machine learning with quantum circuits, since we cannot perform the
+derivatives directly.</p>
+<p>If you’d like to learn more, there are many papers on the topic. Two particularly clear references:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/2107.12390">General parameter-shift rules for quantum gradients</a> (2021). David Wierichs, Josh Izaac, Cody Wang, Cedric Yen-Yu Lin.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2008.08605">The effect of data encoding on the expressive power of variational quantum machine learning models</a> (2020). Maria Schuld, Ryan Sweke, Johannes Jakob Meyer.</p></li>
+</ul>
+<p>Handily, both references have an associated PennyLane demo!</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pennylane.ai/qml/demos/tutorial_expressivity_fourier_series">Quantum models as Fourier series</a> (2020). Maria Schuld, Ryan Sweke, Johannes Jakob Meyer.</p></li>
+<li><p><a class="reference external" href="https://pennylane.ai/qml/demos/tutorial_general_parshift">Generalized parameter-shift rules</a> (2021). David Wierichs.</p></li>
+</ul>
+<p>Finally, PennyLane is jam-packed with tools for analyzing circuits as Fourier series.
+Check out the documentation on the <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/qml_fourier.html">Fourier module</a> to learn more!</p>
+</div>
+<div class="section" id="about-the-author">
+<h2>About the author<a class="headerlink" href="#about-the-author" title="Permalink to this headline">¶</a></h2>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-demos-circuits-as-fourier-series-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4e210776899e5375afa961c2bea21a2e/circuits_as_fourier_series.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">circuits_as_fourier_series.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/719d581ac7151d9abf6599d725fa1624/circuits_as_fourier_series.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">circuits_as_fourier_series.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    <script type="text/javascript">
+        // This script ensures that the active navbar entry switches
+        // from 'QML' to 'Demos' for any webpage within the demos/ directory,
+        // or for any of the demonstration landing pages
+        // (e.g., demos_optimization).
+        var pagename = document.location.href.match(/[^\/]+$/)[0];
+        var dir = document.URL.substr(0,document.URL.lastIndexOf('/')).match(/[^\/]+$/)[0];
+
+        if (pagename.includes("demos") || pagename.includes("demonstrations") || dir.includes("demos")) {
+
+            $(".nav-item.active").removeClass("active");
+            var demos_link = $('.navbar-nav a').filter(function(index) { return $(this).text() === "Demos"; })[0]
+            $(demos_link).parent().addClass("active");
+        }
+    </script>
+
+              <div id="bottom-dl" class="xanadu-call-to-action-links">
+                <div id="tutorial-type">demos/circuits_as_fourier_series</div>
+                <div class="download-python-link">
+                  <i class="fab fa-python"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Python script</div>
+                </div>
+                <div class="download-notebook-link">
+                  <i class="fas fa-download"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Notebook</div>
+                </div>
+                <div class="github-view-link">
+                  <i class="fab fa-github"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">View on GitHub</div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        
+<div class="localtoc-container nano has-scrollbar">
+  <div class="nano-content">
+    <div id="localtoc">
+        
+          <h3>Contents</h3>
+          <!-- Display the ToC for the current document if it is not empty. -->
+          <ul class='current'>
+<li class='current'><a class="reference internal" href="#">Circuits as Fourier series</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#single-qubit-gates">Single-qubit gates</a></li>
+<li class='current'><a class="reference internal" href="#frequency-components">Frequency components</a></li>
+<li class='current'><a class="reference internal" href="#larger-circuits">Larger circuits</a></li>
+<li class='current'><a class="reference internal" href="#coefficient-vectors">Coefficient vectors</a></li>
+<li class='current'><a class="reference internal" href="#the-two-term-parameter-shift-rule">The two-term parameter-shift rule</a></li>
+<li class='current'><a class="reference internal" href="#the-general-parameter-shift-rule">The general parameter-shift rule</a></li>
+<li class='current'><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class='current'><a class="reference internal" href="#about-the-author">About the author</a></li>
+</ul>
+</li>
+</ul>
+
+        
+    </div>
+
+    <div class="xanadu-call-to-action-links">
+        <h3>Downloads</h3>
+        <div id="tutorial-type">demos/circuits_as_fourier_series</div>
+        <div class="download-python-link">
+            <i class="fab fa-python"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Python script</div>
+        </div>
+        <div class="download-notebook-link">
+            <i class="fas fa-download"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Notebook</div>
+        </div>
+        <div class="github-view-link">
+            <i class="fab fa-github"></i>&nbsp;
+            <div class="call-to-action-desktop-view">View on GitHub</div>
+        </div>
+    </div>
+    <div id="related-tutorials" class="mt-4">
+      <h3> Related</h3>
+    </div>
+  </div>
+</div>
+
+
+    
+          <div class="up-button">
+            
+                <a href="../index.html"><i class="fas fa-angle-double-left"></i></a>
+            
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Circuits as Fourier series</a></li> 
+      </ul>
+    </div>
+  <script type="text/javascript">
+    $("#mobile-toggle").click(function () {
+      $("#left-column").slideToggle("slow");
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- MathJax -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  <!-- NanoScroller -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+  <!-- Syntax Highlighting -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript">
+    $("a.reference.internal").each(function(){
+      var link = $(this).attr("href");
+
+      var hash = link.split("#")[1];
+      var page = link.split("#")[0].split("/").slice(-1)[0].replace(".html", "");
+
+      if (hash == page) {
+        $(this).attr("href", link.split("#")[0]);
+      }
+    });
+
+    $(".document > .section").removeClass("section");
+    $("h1 ~ .section").removeClass("section");
+    $(".localtoc-container .nano-content").css("height", $("#content").height());
+    $(".localtoc-container").css("height", $("#content").height());
+    $(".nano").nanoScroller();
+  </script>
+
+  <script type="text/javascript">
+      $(window).scroll(function(){
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < 342) {
+          $(".localtoc-container").css("height", "calc(100% - " + (342 - scrollBottom) + "px)");
+          $(".localtoc-container .nano-content").css("height", "calc(100% - 119px)");
+        }
+      });
+  </script>
+
+  <script type="text/javascript">
+    if ($(".current").length) {
+      var target = $(".current")[0]
+      var rect = target.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight) {
+          $(".nano").nanoScroller({ scrollTo: $(".current") });
+      } else {
+          $(".nano").nanoScroller({ scrollTop: 0 });
+      }
+    }
+    $(document).ready(function () {
+        $(".css-transitions-only-after-page-load").each(function (index, element) {
+            setTimeout(function () { $(element).removeClass("css-transitions-only-after-page-load") }, 10);
+        });
+        if (window.location.hash) {
+          var target = $("[id='" + window.location.hash.substr(1) + "']");
+          if (target.closest(".collapse").length) {
+            target.closest(".collapse").addClass("show");
+            target.closest(".collapse").prev().find(".rotate").addClass("up");
+          }
+        }
+    });
+  </script>
+
+    <script type="text/javascript">
+    var downloadNote = $(".sphx-glr-download-link-note.admonition.note");
+    if (downloadNote.length >= 1) {
+      var tutorialUrlArray = $("#tutorial-type").text().split('/');
+
+      if (tutorialUrlArray[0] == "demos") {
+        tutorialUrlArray[0] = "demonstrations";
+      }
+
+      var githubLink = "https://github.com/" + "PennyLaneAI/qml" + "/blob/master/" + tutorialUrlArray.join("/") + ".py",
+          pythonLink = $(".sphx-glr-download .reference.download")[0].href,
+          notebookLink = $(".sphx-glr-download .reference.download")[1].href;
+
+      $(".download-python-link").wrap("<a href=" + pythonLink + " data-behavior='call-to-action-event' data-response='Download Python script' download target='_blank'/>");
+      $(".download-notebook-link").wrap("<a href=" + notebookLink + " data-behavior='call-to-action-event' data-response='Download Notebook' download target='_blank'/>");
+      $(".github-view-link").wrap("<a href=" + githubLink + " data-behavior='call-to-action-event' data-response='View on Github' target='_blank'/>");
+      $("#right-column").addClass("page-shadow");
+    } else {
+      $(".xanadu-call-to-action-links").hide();
+      $("#bottom-dl").attr('style','display: none !important');
+    }
+    </script>
+
+    <script type="text/javascript">
+      function makeUL(urls, text) {
+          var list = document.createElement('ul');
+
+          for (var i = 0; i < urls.length; i++) {
+              var item = document.createElement('li');
+              var a = document.createElement('a');
+              var linkText = document.createTextNode(text[i]);
+              a.appendChild(linkText);
+              a.href = urls[i];
+              item.appendChild(a);
+              list.appendChild(item);
+          }
+          return list;
+      }
+
+      if (typeof related_tutorials !== 'undefined') {
+          document.getElementById('related-tutorials').appendChild(makeUL(related_tutorials, related_tutorials_titles));
+          $("#related-tutorials ul li a").append(' <i class="fas fa-angle-double-right" style="font-size: smaller;"></i>')
+          $("#related-tutorials").show();
+
+    } else {
+          $("#related-tutorials").hide();
+    }
+    </script>
+
+  <!-- Account for MathJax when navigating to anchor tags. -->
+  <script type="text/javascript">
+    function scrollToElement(e) {
+      // Scrolls to the given element, taking into account the navbar.
+      MathJax.Hub.Queue(function() {
+        // The following MUST be done asynchronously to take effect.
+        setTimeout(function() {
+          const navbar = document.querySelector("nav.navbar");
+          const navbarHeight = navbar ? navbar.offsetHeight : 0;
+          const scrollToY = e.offsetTop + e.offsetParent.offsetTop - navbarHeight;
+          window.scrollTo(0, scrollToY);
+        }, 0);
+      });
+    }
+
+    function scrollToFragment(fragment) {
+      // Scrolls to the position of the given URL fragment (which includes the "#").
+      const elementID = fragment.replace(".", "\\.");
+      if (elementID !== "") {
+        const element = document.querySelector(elementID);
+        if (element !== null) {
+          scrollToElement(element);
+        }
+      }
+    }
+
+    $(document).ready(() => {
+      scrollToFragment(window.location.hash);
+      window.addEventListener("popstate", (_) => scrollToFragment(document.location.hash), false);
+    });
+  </script>
+
+  <!-- Hide the rendering of :orphan: metadata. -->
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const elements = document.getElementsByClassName("field-odd");
+      for (const element of elements) {
+          if (element.innerHTML.trim() === "orphan") {
+            element.style.display = "none";
+          }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    jQuery.noConflict(true);
+  </script>
+
+  
+
+<footer class="page-footer text-md-left pt-4">
+
+  <hr class="pb-0 mb-0">
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+
+      
+      <!-- About -->
+      <div class="col-md-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <p>        PennyLane is an open-source software framework for quantum
+        machine learning, quantum chemistry, and quantum computing, 
+        with the ability to run on all hardware.
+        Maintained with ❤️ by Xanadu.
+        </p>
+      </div>
+      
+
+      <!-- Links -->
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://pennylane.ai/">Home</a></li>
+          
+          <li><a href="https://pennylane.ai/qml">Learn</a></li>
+          
+          <li><a href="https://pennylane.ai/qml/demonstrations.html">Demonstrations</a></li>
+          
+          <li><a href="https://docs.pennylane.ai/">Documentation</a></li>
+          
+          <li><a href="https://github.com/PennyLaneAI/pennylane">GitHub</a></li>
+          
+          <li><a href="https://twitter.com/pennylaneai">Twitter</a></li>
+          
+          <li><a href="https://pennylane.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">Xanadu</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://xanadu.ai/">Home</a></li>
+          
+          <li><a href="https://xanadu.ai/about/">About</a></li>
+          
+          <li><a href="https://xanadu.ai/photonics">Hardware</a></li>
+          
+          <li><a href="https://xanadu.ai/careers/">Careers</a></li>
+          
+          <li><a href="https://cloud.xanadu.ai">Cloud</a></li>
+          
+          <li><a href="https://discuss.pennylane.ai/">Forum</a></li>
+          
+          <li><a href="https://xanadu.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+  <hr>
+
+  <!-- Social -->
+  <div class="social-section text-center">
+      <ul class="list-unstyled list-inline mb-0">
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://twitter.com/PennyLaneAI"><i class="fab fa-twitter"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://github.com/PennyLaneAI/pennylane"><i class="fab fa-github"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://linkedin.com/company/xanaduai/"><i class="fab fa-linkedin-in"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://discuss.pennylane.ai"><i class="fab fa-discourse"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://xanadu-quantum.slack.com/join/shared_invite/zt-nkwn25v9-H4hituCb_PUj4idG0MhSug#/shared-invite/email"><i class="fab fa-slack"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://pennylane.ai/blog/"><i class="fas fa-rss"> </i></a></li>
+          
+      </ul>
+      
+        
+          <a href="https://xanadu.us17.list-manage.com/subscribe?u=725f07a1d1a4337416c3129fd&id=294b062630" style="font-size: initial;">
+            Stay updated with our newsletter
+          </a>
+        
+      
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-3 mt-0 text-center">
+      <div class="container-fluid">
+            Copyright &copy; 2022, Xanadu Quantum Technologies, Inc.
+
+        
+          <br>
+          TensorFlow, the TensorFlow logo, and any related marks are trademarks of Google Inc.
+        
+      </div>
+  </div>
+</footer>
+  </body>
+</html>
