@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="../_static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../_static/favicon.ico">
+  
+
+
+  <meta property="og:title" content="Quantum Teleportation &#8212; PennyLane">
+  <meta property="og:url" content="https://pennylane.ai/qml/demos/tutorial_teleportation.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  
+  
+  
+  
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.14/css/mdb.min.css">
+  <!-- NanoScroller -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/css/nanoscroller.min.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/tomorrow-night.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       "HTML-CSS": { scale: 90, linebreaks: { automatic: true } },
+       TeX: {
+         Macros: {
+           pr : ['|\#1\\rangle\\langle\#1|',1],
+           ket: ['\\left| \#1\\right\\rangle',1],
+           bra: ['\\left\\langle \#1\\right|',1],
+           xket: ['\\left| \#1\\right\\rangle_x',1],
+           xbra: ['\\left\\langle \#1\\right|_x',1],
+           braket: ['\\langle \#1 \\rangle',1],
+           braketD: ['\\langle \#1 \\mid \#2 \\rangle',2],
+           braketT: ['\\langle \#1 \\mid \#2 \\mid \#3 \\rangle',3],
+           ketbra: ['| #1 \\rangle \\langle #2 |',2],
+           hc: ['\\text{h.c.}',0],
+           cc: ['\\text{c.c.}',0],
+           h: ['\\hat',0],
+           nn: ['\\nonumber',0],
+           di: ['\\frac{d}{d \#1}',1],
+           uu: ['\\mathcal{U}',0],
+           inn: ['\\text{in}',0],
+           out: ['\\text{out}',0],
+           vac: ['\\text{vac}',0],
+           I: ['\\hat{\\mathbf{1}}',0],
+           x: ['\\hat{x}',0],
+           p: ['\\hat{p}',0],
+           a: ['\\hat{a}',0],
+           ad: ['\\hat{a}^\\dagger',0],
+           n: ['\\hat{n}',0],
+           nbar: ['\\overline{n}',0],
+           sech: ['\\mathrm{sech~}',0],
+           tanh: ['\\mathrm{tanh~}',0],
+           re: ['\\text{Re}',0],
+           im: ['\\text{Im}',0],
+           tr: ['\\mathrm{Tr} #1',1],
+           sign: ['\\text{sign}',0],
+           overlr: ['\\overset\\leftrightarrow{\#1}',1],
+           overl: ['\\overset\leftarrow{\#1}',1],
+           overr: ['\\overset\rightarrow{\#1}',1],
+           avg: ['\\left< \#1 \\right>',1],
+           slashed: ['\\cancel{\#1}',1],
+           bold: ['\\boldsymbol{\#1}',1],
+           d: ['\\mathrm d',0],
+           expect: ["\\langle #1 \\rangle",1],
+           pde: ["\\frac{\\partial}{\\partial \#1}",1],
+           R: ["\\mathbb{R}",0],
+           C: ["\\mathbb{C}",0],
+           Ad: ["\\text{Ad}",0],
+           Var: ["\\text{Var}",0],
+           bx: ["\\mathbf{x}", 0],
+           bm: ["\\boldsymbol{\#1}",1],
+           haf: ["\\mathrm{haf}",0],
+           lhaf: ["\\mathrm{lhaf}",0]
+         }
+       }
+     });
+     </script>
+
+  <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130507810-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130507810-1');
+      </script>
+  
+    <title>Quantum Teleportation &#8212; PennyLane  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/xanadu.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/light-slider.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/hubs.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="canonical" href="https://pennylane.ai/qml/demos/tutorial_teleportation.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quantum machine learning" href="../demos_qml.html" />
+    <link rel="prev" title="Getting started with Amazon Braket Hybrid Jobs" href="getting_started_with_hybrid_jobs.html" /> 
+  </head><body><nav class="navbar navbar-expand-lg navbar-light white sticky-top">
+
+<!-- Logo and Title -->
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <a class="navbar-brand nav-link" href="https://pennylane.ai">
+    
+  <img class="pr-1" src=" ../_static/logo.png" width="28px"></img>
+  
+    <img id="navbar-wordmark" src="../_static/pennylane.svg"></img>
+  
+  </a>
+
+
+  <!-- [Mobile] Collapse Button -->
+  <div class="row right">
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <!-- [Mobile] Collapsible Content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+
+    <!-- Links on the Left -->
+    <ul class="navbar-nav mr-auto">
+      
+        
+          
+            <li class="nav-item active">
+              <a class="nav-link" href="https://pennylane.ai/qml/">
+                
+  
+    Learn
+  
+
+              </a>
+              <span class="sr-only">(current)</span>
+            </li>
+          
+
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/qml/demonstrations.html">
+                
+  
+    Demos
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/install.html">
+                
+  
+    Install
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/plugins.html">
+                
+  
+    Plugins
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://docs.pennylane.ai">
+                
+  
+    Documentation
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/blog/">
+                
+  
+    Blog
+  
+
+            </a>
+          </li>
+        
+      
+    </ul>
+
+    <!-- Links on the Right -->
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://pennylane.ai/faq.html">
+            <i class="fas fa-question pr-1"></i> FAQ
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://discuss.pennylane.ai/">
+            <i class="fab fa-discourse pr-1"></i> Support
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/PennyLaneAI/pennylane">
+            <i class="fab fa-github pr-1"></i> GitHub
+          </a>
+        </li>
+      
+
+    </ul>
+  </div>
+
+</nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../demos_qml.html" title="Quantum machine learning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="getting_started_with_hybrid_jobs.html" title="Getting started with Amazon Braket Hybrid Jobs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_getting-started.html" accesskey="U">Getting Started</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Quantum Teleportation</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+        <div id="content">
+          <div id="right-column">
+            
+            
+
+            <div class="document clearer body">
+              
+    <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-demos-tutorial-teleportation-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="quantum-teleportation">
+<span id="sphx-glr-demos-tutorial-teleportation-py"></span><h1>Quantum Teleportation<a class="headerlink" href="#quantum-teleportation" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial walks you through a popular quantum information technique known as
+<em>quantum teleportation</em>. While teleportation has been thought of as the stuff of
+sci-fi legend, we are going to prove that it is actually already possible today! The
+technique leverages many foundational principles of quantum computing, and it has
+lots of useful applications across the entire field. These principles include (but
+are not limited to): the no-cloning theorem, quantum entanglement, and the
+principle of deferred measurement. Let’s dive in!</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="figure align-center">
+<a class="reference external image-reference" href="javascript:void(0)"><img alt="../_images/socialthumbnail_large_Quantum_Teleportation.png" src="../_images/socialthumbnail_large_Quantum_Teleportation.png" style="width: 50%;" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="goal-transferring-quantum-information">
+<h2>Goal: Transferring Quantum Information<a class="headerlink" href="#goal-transferring-quantum-information" title="Permalink to this headline">¶</a></h2>
+<p>Suppose there are two researchers named Alice and Bob, and Alice wants to send
+her quantum state to Bob. The quantum teleportation protocol enables Alice to
+do exactly this in a very elegant manner, and it can be described in four steps:</p>
+<p>1. State preparation: Alice initializes her qubit to the state she wishes to
+teleport.</p>
+<p>2. Shared entanglement: A Bell state is created and distributed to Alice and
+Bob (one qubit each).</p>
+<p>3. Change of basis: Alice converts her two qubits from the Bell basis to the
+computational basis.</p>
+<p>4. Measurement: Alice measures her two qubits, then tells Bob how to convert
+his qubit to obtain the desired state. Note that it is only quantum <em>information</em>
+being teleported, and not a physical particle.</p>
+<p>An overview of the protocol can be seen here:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_full_text.svg"><img alt="../_images/teleport_circuit_full_text.svg" src="../_images/teleport_circuit_full_text.svg" width="75%" /></a>
+</div>
+</div>
+<div class="section" id="problem-the-no-cloning-theorem">
+<h2>Problem: The No-Cloning Theorem<a class="headerlink" href="#problem-the-no-cloning-theorem" title="Permalink to this headline">¶</a></h2>
+<p>You might be wondering why we need to teleport a state at all. Can’t Alice
+just make a copy of it and send the copy to Bob? It turns out that copying
+arbitrary states is <em>prohibited</em>, which you can understand using something called the
+<strong>no-cloning theorem</strong>. The proof is surprisingly straightforward. Suppose we
+would like to design a circuit (unitary transformation) <span class="math notranslate nohighlight">\(U\)</span> that can
+perform the following action:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+U(\vert \psi\rangle \otimes \vert s\rangle ) &amp;= \vert \psi\rangle \otimes \vert \psi\rangle, \\
+U(\vert \varphi\rangle \otimes \vert s\rangle ) &amp;= \vert \varphi \rangle \otimes \vert \varphi \rangle,
+\end{align*}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\vert \psi\rangle\)</span> and <span class="math notranslate nohighlight">\(\vert \varphi\rangle\)</span> are arbitrary,
+normalized single-qubit states, and <span class="math notranslate nohighlight">\(\vert s \rangle\)</span> is some arbitrary,
+normalized starting state. We will now prove that no such <span class="math notranslate nohighlight">\(U\)</span> exists!</p>
+<p>First, let’s take the inner product of the left-hand sides of the two equations:</p>
+<div class="math notranslate nohighlight">
+\[(\langle \psi \vert \otimes \langle s \vert) U^\dagger U(\vert \varphi\rangle \otimes \vert s\rangle ) = \langle \psi \vert \varphi\rangle \  \langle s \vert s\rangle\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\langle s \vert s\rangle\)</span> equals 1, this evaluates to
+<span class="math notranslate nohighlight">\(\langle \psi \vert \varphi \rangle\)</span>. Next, we compare the inner product of the
+right-hand sides of the two equations: <span class="math notranslate nohighlight">\((\langle \psi \vert \varphi \rangle)^2\)</span>.
+These inner products must be equal, and they are only equal if they are a value that
+squares to itself. The only valid values for the inner product then are 1 and 0. But
+if the inner product is 1, the states are the same; on the other hand, if the inner
+product is 0, the states are orthogonal. Therefore, we can’t clone arbitrary states!</p>
+</div>
+<div class="section" id="solution-quantum-teleportation">
+<h2>Solution: Quantum Teleportation<a class="headerlink" href="#solution-quantum-teleportation" title="Permalink to this headline">¶</a></h2>
+<p>We will now walk through how to share quantum information without cloning it, one
+step at a time.</p>
+<div class="section" id="state-preparation">
+<h3>1. State preparation<a class="headerlink" href="#state-preparation" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_state_preparation.svg"><img alt="../_images/teleport_circuit_state_preparation.svg" src="../_images/teleport_circuit_state_preparation.svg" width="75%" /></a>
+</div>
+<p>Teleportation involves three qubits. Two of them are held by Alice, and the
+third by Bob. We’ll denote their states using subscripts:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vert\cdot\rangle_S\)</span>, Alice’s first qubit that she will prepare in
+some arbitrary state</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vert\cdot\rangle_A\)</span>, Alice’s auxiliary (or “ancilla”) qubit that
+she will entangle with Bob’s qubit for communication purposes</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vert \cdot\rangle_B\)</span>, Bob’s qubit that will receive the teleported
+state</p></li>
+</ol>
+<p>Together, their starting state is:</p>
+<div class="math notranslate nohighlight">
+\[\vert 0\rangle_S \vert 0\rangle_A \vert 0\rangle_B.\]</div>
+<p>The first thing Alice does is prepare her first qubit in whichever state <span class="math notranslate nohighlight">\(\vert
+\psi\rangle\)</span> that she’d like to send to Bob so that their combined state
+becomes:</p>
+<div class="math notranslate nohighlight">
+\[\vert \psi\rangle_S \vert 0\rangle_A \vert 0\rangle_B.\]</div>
+<p>We can use the following <a class="reference external" href="https://docs.pennylane.ai/en/stable/introduction/circuits.html#quantum-functions">quantum function</a>
+to do the state preparation step:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="nn">qml</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">state_preparation</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.StatePrep.html#pennylane.StatePrep" title="pennylane.StatePrep" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">StatePrep</span></a><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shared-entanglement">
+<h3>2. Shared entanglement<a class="headerlink" href="#shared-entanglement" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_entanglement.svg"><img alt="../_images/teleport_circuit_entanglement.svg" src="../_images/teleport_circuit_entanglement.svg" width="75%" /></a>
+</div>
+<p>The reason why teleportation works is the use of an <em>entangled state</em> as a
+shared resource between Alice and Bob. You can imagine some process that
+generates a pair of entangled qubits, and sends one qubit to each party. For
+simplicity (and simulation!), we will represent the entanglement process as
+part of our circuit.</p>
+<p>Entangling the qubits <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> leads to the combined state:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\sqrt{2}}\left( \vert \psi\rangle_S \vert 0\rangle_A \vert 0\rangle_B + \vert \psi\rangle_S \vert 1\rangle_A \vert 1\rangle_B \right)\tag{1}\]</div>
+<p>The <span class="math notranslate nohighlight">\(AB\)</span> subsystem is now in what is known as a <em>Bell state</em>. There are
+four maximally entangled two-qubit Bell states, and they form the Bell basis:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\vert \psi_+\rangle &amp;= \frac{1}{\sqrt{2}} \left( \vert 00\rangle + \vert 11\rangle \right), \\
+\vert \psi_-\rangle &amp;= \frac{1}{\sqrt{2}} \left( \vert 00\rangle - \vert 11\rangle \right), \\
+\vert \phi_+\rangle &amp;= \frac{1}{\sqrt{2}} \left( \vert 01\rangle + \vert 10\rangle \right), \\
+\vert \phi_-\rangle &amp;= \frac{1}{\sqrt{2}} \left( \vert 01\rangle - \vert 10\rangle \right).
+\end{align*}\end{split}\]</div>
+<p>In our experiment, because <span class="math notranslate nohighlight">\(AB\)</span> started in the <span class="math notranslate nohighlight">\(\vert 00\rangle\)</span>
+state, we create the <span class="math notranslate nohighlight">\(\vert \psi_+\rangle\)</span> Bell state as is shown in
+equation (1).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">entangle_qubits</span><span class="p">():</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.Hadamard.html#pennylane.Hadamard" title="pennylane.Hadamard" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">Hadamard</span></a><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.CNOT.html#pennylane.CNOT" title="pennylane.CNOT" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">CNOT</span></a><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>From now on, the qubit subscripts will be removed from states for brevity.</p>
+</div>
+<div class="section" id="change-of-basis">
+<h3>3. Change of basis<a class="headerlink" href="#change-of-basis" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_change_of_basis.svg"><img alt="../_images/teleport_circuit_change_of_basis.svg" src="../_images/teleport_circuit_change_of_basis.svg" width="75%" /></a>
+</div>
+<p>This is where things get tricky, but also very interesting. The third step of
+the protocol is to apply a CNOT and a Hadamard to the first two qubits. This is
+done prior to the measurements, and labelled “change of basis”. But what basis
+is this? Notice how these two gates are the <em>opposite</em> of what we do to create a
+Bell state. If we run them in the opposite direction, we transform the basis
+back to the computational one, and simulate a measurement in the Bell basis.</p>
+<p>After the basis transform, if we observe the first two qubits to be in the state
+<span class="math notranslate nohighlight">\(\vert 00\rangle\)</span>, this would correspond to the outcome <span class="math notranslate nohighlight">\(\vert \psi_+\rangle\)</span> in
+the Bell basis, <span class="math notranslate nohighlight">\(\vert 11\rangle\)</span> would correspond to <span class="math notranslate nohighlight">\(\vert \phi_-\rangle\)</span>,
+etc. Let’s perform this change of basis, one step at a time.</p>
+<p>Suppose we write our initial state <span class="math notranslate nohighlight">\(\vert \psi\rangle\)</span> as
+<span class="math notranslate nohighlight">\(\alpha\vert 0\rangle + \beta\vert 1\rangle\)</span>, with <span class="math notranslate nohighlight">\(\alpha\)</span> and
+<span class="math notranslate nohighlight">\(\beta\)</span> being complex coefficients. Expanding out the terms from (1), we obtain:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\sqrt{2}} ( \alpha\vert 000\rangle +
+\beta\vert 100\rangle + \alpha \vert 011\rangle +
+\beta\vert 111\rangle )\]</div>
+<p>Now let’s apply a CNOT between Alice’s two qubits:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\sqrt{2}} ( \alpha\vert 000\rangle +
+\beta\vert 110\rangle + \alpha \vert 011\rangle +
+\beta\vert 101\rangle )\]</div>
+<p>And then a Hadamard on her first qubit:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2} ( \alpha \vert 000\rangle + \alpha\vert 100\rangle + \beta\vert 010\rangle - \beta\vert 110\rangle + \alpha \vert 011\rangle + \alpha \vert 111 \rangle + \beta\vert 001\rangle - \beta\vert 101 \rangle ).\]</div>
+<p>Now we need to do some rearranging. We group the terms based on the first two qubits:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2} \vert 00\rangle(\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 01\rangle (\beta\vert 0\rangle + \alpha\vert 1\rangle) + \frac{1}{2}\vert 10\rangle (\alpha\vert 0\rangle - \beta\vert 1\rangle) + \frac{1}{2}\vert 11\rangle (-\beta\vert 0\rangle + \alpha\vert 1\rangle).\tag{2}\]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">basis_rotation</span><span class="p">():</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.CNOT.html#pennylane.CNOT" title="pennylane.CNOT" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">CNOT</span></a><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">])</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.Hadamard.html#pennylane.Hadamard" title="pennylane.Hadamard" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">Hadamard</span></a><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="measurement">
+<h3>4. Measurement<a class="headerlink" href="#measurement" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_measurement.svg"><img alt="../_images/teleport_circuit_measurement.svg" src="../_images/teleport_circuit_measurement.svg" width="75%" /></a>
+</div>
+<p>The last step of the protocol involves Alice performing a measurement on her
+qubits, and telling Bob to perform some operations depending on what she
+measured. But why exactly do we need to do this? In the previous step, we
+already performed a basis rotation back to the computational basis, so
+shouldn’t we be good to go? Not quite, but almost!</p>
+<p>Let’s take another look at equation (2). If Alice measures her two qubits in the
+computational basis, she is equally likely to obtain any of the four possible
+outcomes. If she observes the first two qubits in the state <span class="math notranslate nohighlight">\(\vert 00 \rangle\)</span>,
+she would immediately know that Bob’s qubit was in the state
+<span class="math notranslate nohighlight">\(\alpha \vert 0 \rangle + \beta \vert 1 \rangle\)</span>, which is precisely the
+state we are trying to teleport!</p>
+<p>If instead she observed the qubits in state <span class="math notranslate nohighlight">\(\vert 01\rangle\)</span>, she’d still
+know what state Bob has, but it’s a little off from the original state. In particular,
+we have:</p>
+<div class="math notranslate nohighlight">
+\[\beta \vert 0 \rangle + \alpha \vert 1 \rangle = X \vert \psi \rangle.\]</div>
+<p>After obtaining these results, Alice could tell Bob to simply apply an X
+gate to his qubit to recover the original state. Similarly, if she obtained
+<span class="math notranslate nohighlight">\(\vert 10\rangle\)</span>, she would tell him to apply a Z gate.</p>
+<p>In the <a class="reference external" href="https://quantum.country/teleportation">“traditional” version of quantum
+teleportation</a> <a class="footnote-reference brackets" href="#teleportation1993" id="id1">1</a>,
+this is, in fact, exactly what happens. Alice would call up Bob on the phone,
+tell him which state she observed, and then he would be able to apply an appropriate
+correction. In this situation, measurements are happening partway through the protocol,
+and the results would be used to control the application of future quantum gates. This
+is known as mid-circuit measurement, and such mid-circuit measurements are expressed
+in PennyLane using <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.measure.html#pennylane.measure" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">qml.measure</span></code></a>. Mid-circuit measurement
+results can be used to control operations, and this is expressed in PennyLane using
+<a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.cond.html#pennylane.cond" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">qml.cond</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">measure_and_update</span><span class="p">():</span>
+    <span class="n">m0</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.measure.html#pennylane.measure" title="pennylane.measure" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">measure</span></a><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+    <span class="n">m1</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.measure.html#pennylane.measure" title="pennylane.measure" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">measure</span></a><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.cond.html#pennylane.cond" title="pennylane.cond" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">cond</span></a><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.PauliX.html#pennylane.PauliX" title="pennylane.PauliX" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">PauliX</span></a><span class="p">)(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.cond.html#pennylane.cond" title="pennylane.cond" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">cond</span></a><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.PauliZ.html#pennylane.PauliZ" title="pennylane.PauliZ" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">PauliZ</span></a><span class="p">)(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We’ve now defined all the building blocks for the quantum teleportation
+protocol. Let’s put it all together!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">teleport</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="n">state_preparation</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">entangle_qubits</span><span class="p">()</span>
+    <span class="n">basis_rotation</span><span class="p">()</span>
+    <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.Barrier.html#pennylane.Barrier" title="pennylane.Barrier" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class"><span class="n">qml</span><span class="o">.</span><span class="n">Barrier</span></a><span class="p">([</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">],</span> <span class="n">only_visual</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">measure_and_update</span><span class="p">()</span>
+
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.3</span><span class="n">j</span><span class="p">,</span> <span class="mf">0.4</span> <span class="o">-</span> <span class="mf">0.5</span><span class="n">j</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.draw_mpl.html#pennylane.draw_mpl" title="pennylane.draw_mpl" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">draw_mpl</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">teleport</span></a><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;pennylane&quot;</span><span class="p">)(</span><span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_tutorial_teleportation_001.png" srcset="../_images/sphx_glr_tutorial_teleportation_001.png" alt="tutorial teleportation" class = "sphx-glr-single-img"/><p>There is a neat concept known as the <a class="reference external" href="https://en.wikipedia.org/wiki/Deferred_Measurement_Principle">principle of deferred measurement</a> <a class="footnote-reference brackets" href="#nandc2000" id="id2">2</a>,
+and it basically states that we can push all our measurements to the <em>end</em>
+of our circuit. This can be useful for a variety of reasons, such as when
+working in a system that does not support mid-circuit measurements. In
+PennyLane, when you bind a circuit to a device that does not support them,
+it will automatically apply the principle of deferred measurement and update
+your circuit to use controlled operations instead.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dev</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.device.html#pennylane.device" title="pennylane.device" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">&quot;default.qubit&quot;</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])</span>
+
+
+<span class="nd">@qml</span><span class="o">.</span><span class="n">qnode</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">teleport</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="n">state_preparation</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">entangle_qubits</span><span class="p">()</span>
+    <span class="n">basis_rotation</span><span class="p">()</span>
+    <span class="n">measure_and_update</span><span class="p">()</span>
+    <span class="k">return</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.density_matrix.html#pennylane.density_matrix" title="pennylane.density_matrix" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">density_matrix</span></a><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">])</span>
+
+
+<span class="n">_</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.draw_mpl.html#pennylane.draw_mpl" title="pennylane.draw_mpl" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">draw_mpl</span></a><span class="p">(</span><a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">teleport</span></a><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;pennylane&quot;</span><span class="p">)(</span><span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_tutorial_teleportation_002.png" srcset="../_images/sphx_glr_tutorial_teleportation_002.png" alt="tutorial teleportation" class = "sphx-glr-single-img"/><p>Poof! Our classical signals have been turned into CNOT and CZ gates. This is
+exactly what the principle of deferred measurement gives us — we can apply a
+CNOT instead of Alice calling Bob and telling him to apply an X gate, and
+likewise for the CZ gate. This is incredibly useful, as it allows us to
+perform our correction <em>before</em> any measurements are made. Let’s evaluate the
+action of the CNOT and CZ on Bob’s qubit, and ensure that Alice’s state has been
+successfully teleported. Applying the CNOT yields:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2} \vert 00\rangle(\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 01\rangle (\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 10\rangle (\alpha\vert 0\rangle - \beta\vert 1\rangle) + \frac{1}{2}\vert 11\rangle (\alpha\vert 0\rangle - \beta\vert 1\rangle)\]</div>
+<p>Then, applying the CZ yields:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2} \vert 00\rangle(\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 01\rangle (\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 10\rangle (\alpha\vert 0\rangle + \beta\vert 1\rangle) + \frac{1}{2}\vert 11\rangle (\alpha\vert 0\rangle + \beta\vert 1\rangle)\tag{3}\]</div>
+<p>When Alice measures her two qubits at the end, no matter which outcome she
+gets, Bob’s qubit will be in the state <span class="math notranslate nohighlight">\(\alpha\vert 0\rangle + \beta \vert
+1\rangle\)</span>. This means that our protocol has changed the state of Bob’s qubit
+into the one Alice wished to send him, which is truly incredible!</p>
+<p>We can use <a class="reference external" href="https://docs.pennylane.ai/en/stable/code/api/pennylane.density_matrix.html#pennylane.density_matrix" title="(in PennyLane v0.32)"><code class="xref py py-func docutils literal notranslate"><span class="pre">qml.density_matrix</span></code></a> to trace out
+and return Bob’s subsystem as a density matrix, which is a more general
+description of the state of his qubit. We will use this to verify that Alice’s
+state was successfully teleported to Bob’s qubit.
+Re-arranging equation (3), we can see that the final state of the system is:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2} (\vert 00\rangle + \vert 01\rangle + \vert 10\rangle + \vert 11\rangle) \vert \psi\rangle\tag{4}\]</div>
+<p>Now, we can confirm that our implementation of the quantum teleportation protocol
+is working as expected by comparing Bob’s final density matrix to Alice’s original
+density matrix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">teleport_state</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="n">teleported_density_matrix</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.QNode.html#pennylane.QNode" title="pennylane.QNode" class="sphx-glr-backref-module-pennylane sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">teleport</span></a><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">original_density_matrix</span> <span class="o">=</span> <a href="https://docs.pennylane.ai/en/stable/code/api/pennylane.math.dm_from_state_vector.html#pennylane.math.dm_from_state_vector" title="pennylane.math.dm_from_state_vector" class="sphx-glr-backref-module-pennylane-math sphx-glr-backref-type-py-function"><span class="n">qml</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dm_from_state_vector</span></a><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">teleported_density_matrix</span><span class="p">,</span> <span class="n">original_density_matrix</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Alice&#39;s state (</span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">) not teleported properly. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Final density matrix of Bob&#39;s subsystem: </span><span class="si">{</span><span class="n">teleported_density_matrix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;State successfully teleported!&quot;</span><span class="p">)</span>
+
+
+<span class="n">teleport_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>State successfully teleported!
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Let’s recap the concepts we’ve learned throughout this tutorial. First, we
+established that quantum states cannot be arbitrarily copied due to the
+<em>no-cloning theorem</em>. Then, we learned about <em>quantum entanglement</em>. Once
+Alice and Bob shared an entangled pair of qubits, Alice performed a <em>change
+of basis</em> from the Bell basis to the computational basis. Finally, using the
+<em>principle of deferred measurement</em> when needed, Alice measured her two
+qubits and informed Bob on how to rotate his qubit into the desired state.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/teleport_circuit_full_gates.svg"><img alt="../_images/teleport_circuit_full_gates.svg" src="../_images/teleport_circuit_full_gates.svg" width="75%" /></a>
+</div>
+<p>Just like that, Alice and Bob performed quantum teleportation, and with a
+fairly small circuit! Some of you may now be thinking that teleportation is
+impossible, and you would be in good company if so. Einstein himself referred
+to the non-local nature of entanglement as “spooky action at a distance”, but
+we can all rest easy: due to the need for classical communication from Alice
+to Bob, quantum states (in other words, information) still cannot be
+teleported faster than the speed of light. Don’t let that take away from
+the importance of quantum teleportation! This protocol is a critical tool in
+quantum information processing, and now it is a tool that you wield.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="teleportation1993"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>C. H. Bennett, G. Brassard, C. Crépeau, R. Jozsa, A. Peres, W. K. Wootters (1993)
+<a class="reference external" href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.70.1895">“Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels”</a>,
+Phys. Rev. Lett. 70, 1895.</p>
+</dd>
+<dt class="label" id="nandc2000"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>M. A. Nielsen, and I. L. Chuang (2000) “Quantum Computation and Quantum Information”,
+Cambridge University Press.</p>
+</dd>
+<dt class="label" id="codebook"><span class="brackets">3</span></dt>
+<dd><p>C. Albornoz, G. Alonso, M. Andrenkov, P. Angara, A. Asadi, A. Ballon, S. Bapat, I. De Vlugt,
+O. Di Matteo, P. Finlay, A. Fumagalli, A. Gardhouse, N. Girard, A. Hayes, J. Izaac, R. Janik,
+T. Kalajdzievski, N. Killoran, J. Soni, D. Wakeham. (2021) Xanadu Quantum Codebook.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="about-the-author">
+<h2>About the author<a class="headerlink" href="#about-the-author" title="Permalink to this headline">¶</a></h2>
+<div class="bio" >
+    <div class="photo" >
+        <img class="photo__img" src="../_static/authors/matthew_silverman.jpg" alt="Matthew Silverman" >
+    </div>
+    <div class="bio-text">
+        <h4 class="bio-text__author-name">Matthew Silverman</h4>
+        <p class="bio-text__author-description">Matthew is a quantum software developer at Xanadu. When he's not in the quantum world, you can usually find him making music or sipping coffee with a book in hand.</p>
+    </div>
+</div><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.736 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-demos-tutorial-teleportation-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/3a216b5f2c778c39d70258deb2e6dad3/tutorial_teleportation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tutorial_teleportation.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/942c72221535f668e4d966f6c09a9e8d/tutorial_teleportation.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tutorial_teleportation.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    <script type="text/javascript">
+        // This script ensures that the active navbar entry switches
+        // from 'QML' to 'Demos' for any webpage within the demos/ directory,
+        // or for any of the demonstration landing pages
+        // (e.g., demos_optimization).
+        var pagename = document.location.href.match(/[^\/]+$/)[0];
+        var dir = document.URL.substr(0,document.URL.lastIndexOf('/')).match(/[^\/]+$/)[0];
+
+        if (pagename.includes("demos") || pagename.includes("demonstrations") || dir.includes("demos")) {
+
+            $(".nav-item.active").removeClass("active");
+            var demos_link = $('.navbar-nav a').filter(function(index) { return $(this).text() === "Demos"; })[0]
+            $(demos_link).parent().addClass("active");
+        }
+    </script>
+
+              <div id="bottom-dl" class="xanadu-call-to-action-links">
+                <div id="tutorial-type">demos/tutorial_teleportation</div>
+                <div class="download-python-link">
+                  <i class="fab fa-python"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Python script</div>
+                </div>
+                <div class="download-notebook-link">
+                  <i class="fas fa-download"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Notebook</div>
+                </div>
+                <div class="github-view-link">
+                  <i class="fab fa-github"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">View on GitHub</div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        
+<div class="localtoc-container nano has-scrollbar">
+  <div class="nano-content">
+    <div id="localtoc">
+        
+          <h3>Contents</h3>
+          <!-- Display the ToC for the current document if it is not empty. -->
+          <ul class='current'>
+<li class='current'><a class="reference internal" href="#">Quantum Teleportation</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#goal-transferring-quantum-information">Goal: Transferring Quantum Information</a></li>
+<li class='current'><a class="reference internal" href="#problem-the-no-cloning-theorem">Problem: The No-Cloning Theorem</a></li>
+<li class='current'><a class="reference internal" href="#solution-quantum-teleportation">Solution: Quantum Teleportation</a><ul class='current'>
+<li class='current'><a class="reference internal" href="#state-preparation">1. State preparation</a></li>
+<li class='current'><a class="reference internal" href="#shared-entanglement">2. Shared entanglement</a></li>
+<li class='current'><a class="reference internal" href="#change-of-basis">3. Change of basis</a></li>
+<li class='current'><a class="reference internal" href="#measurement">4. Measurement</a></li>
+</ul>
+</li>
+<li class='current'><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class='current'><a class="reference internal" href="#references">References</a></li>
+<li class='current'><a class="reference internal" href="#about-the-author">About the author</a></li>
+</ul>
+</li>
+</ul>
+
+        
+    </div>
+
+    <div class="xanadu-call-to-action-links">
+        <h3>Downloads</h3>
+        <div id="tutorial-type">demos/tutorial_teleportation</div>
+        <div class="download-python-link">
+            <i class="fab fa-python"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Python script</div>
+        </div>
+        <div class="download-notebook-link">
+            <i class="fas fa-download"></i>&nbsp;
+            <div class="call-to-action-desktop-view">Download Notebook</div>
+        </div>
+        <div class="github-view-link">
+            <i class="fab fa-github"></i>&nbsp;
+            <div class="call-to-action-desktop-view">View on GitHub</div>
+        </div>
+    </div>
+    <div id="related-tutorials" class="mt-4">
+      <h3> Related</h3>
+    </div>
+  </div>
+</div>
+
+
+    
+          <div class="up-button">
+            
+              
+                <a href="../demos_getting-started.html"><i class="fas fa-angle-double-left"></i></a>
+              
+            
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../demos_qml.html" title="Quantum machine learning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="getting_started_with_hybrid_jobs.html" title="Getting started with Amazon Braket Hybrid Jobs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../demonstrations.html" >Demos</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../demos_getting-started.html" >Getting Started</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Quantum Teleportation</a></li> 
+      </ul>
+    </div>
+  <script type="text/javascript">
+    $("#mobile-toggle").click(function () {
+      $("#left-column").slideToggle("slow");
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- MathJax -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  <!-- NanoScroller -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+  <!-- Syntax Highlighting -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript">
+    $("a.reference.internal").each(function(){
+      var link = $(this).attr("href");
+
+      var hash = link.split("#")[1];
+      var page = link.split("#")[0].split("/").slice(-1)[0].replace(".html", "");
+
+      if (hash == page) {
+        $(this).attr("href", link.split("#")[0]);
+      }
+    });
+
+    $(".document > .section").removeClass("section");
+    $("h1 ~ .section").removeClass("section");
+    $(".localtoc-container .nano-content").css("height", $("#content").height());
+    $(".localtoc-container").css("height", $("#content").height());
+    $(".nano").nanoScroller();
+  </script>
+
+  <script type="text/javascript">
+      $(window).scroll(function(){
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < 342) {
+          $(".localtoc-container").css("height", "calc(100% - " + (342 - scrollBottom) + "px)");
+          $(".localtoc-container .nano-content").css("height", "calc(100% - 119px)");
+        }
+      });
+  </script>
+
+  <script type="text/javascript">
+    if ($(".current").length) {
+      var target = $(".current")[0]
+      var rect = target.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight) {
+          $(".nano").nanoScroller({ scrollTo: $(".current") });
+      } else {
+          $(".nano").nanoScroller({ scrollTop: 0 });
+      }
+    }
+    $(document).ready(function () {
+        $(".css-transitions-only-after-page-load").each(function (index, element) {
+            setTimeout(function () { $(element).removeClass("css-transitions-only-after-page-load") }, 10);
+        });
+        if (window.location.hash) {
+          var target = $("[id='" + window.location.hash.substr(1) + "']");
+          if (target.closest(".collapse").length) {
+            target.closest(".collapse").addClass("show");
+            target.closest(".collapse").prev().find(".rotate").addClass("up");
+          }
+        }
+    });
+  </script>
+
+    <script type="text/javascript">
+    var downloadNote = $(".sphx-glr-download-link-note.admonition.note");
+    if (downloadNote.length >= 1) {
+      var tutorialUrlArray = $("#tutorial-type").text().split('/');
+
+      if (tutorialUrlArray[0] == "demos") {
+        tutorialUrlArray[0] = "demonstrations";
+      }
+
+      var githubLink = "https://github.com/" + "PennyLaneAI/qml" + "/blob/master/" + tutorialUrlArray.join("/") + ".py",
+          pythonLink = $(".sphx-glr-download .reference.download")[0].href,
+          notebookLink = $(".sphx-glr-download .reference.download")[1].href;
+
+      $(".download-python-link").wrap("<a href=" + pythonLink + " data-behavior='call-to-action-event' data-response='Download Python script' download target='_blank'/>");
+      $(".download-notebook-link").wrap("<a href=" + notebookLink + " data-behavior='call-to-action-event' data-response='Download Notebook' download target='_blank'/>");
+      $(".github-view-link").wrap("<a href=" + githubLink + " data-behavior='call-to-action-event' data-response='View on Github' target='_blank'/>");
+      $("#right-column").addClass("page-shadow");
+    } else {
+      $(".xanadu-call-to-action-links").hide();
+      $("#bottom-dl").attr('style','display: none !important');
+    }
+    </script>
+
+    <script type="text/javascript">
+      function makeUL(urls, text) {
+          var list = document.createElement('ul');
+
+          for (var i = 0; i < urls.length; i++) {
+              var item = document.createElement('li');
+              var a = document.createElement('a');
+              var linkText = document.createTextNode(text[i]);
+              a.appendChild(linkText);
+              a.href = urls[i];
+              item.appendChild(a);
+              list.appendChild(item);
+          }
+          return list;
+      }
+
+      if (typeof related_tutorials !== 'undefined') {
+          document.getElementById('related-tutorials').appendChild(makeUL(related_tutorials, related_tutorials_titles));
+          $("#related-tutorials ul li a").append(' <i class="fas fa-angle-double-right" style="font-size: smaller;"></i>')
+          $("#related-tutorials").show();
+
+    } else {
+          $("#related-tutorials").hide();
+    }
+    </script>
+
+  <!-- Account for MathJax when navigating to anchor tags. -->
+  <script type="text/javascript">
+    function scrollToElement(e) {
+      // Scrolls to the given element, taking into account the navbar.
+      MathJax.Hub.Queue(function() {
+        // The following MUST be done asynchronously to take effect.
+        setTimeout(function() {
+          const navbar = document.querySelector("nav.navbar");
+          const navbarHeight = navbar ? navbar.offsetHeight : 0;
+          const scrollToY = e.offsetTop + e.offsetParent.offsetTop - navbarHeight;
+          window.scrollTo(0, scrollToY);
+        }, 0);
+      });
+    }
+
+    function scrollToFragment(fragment) {
+      // Scrolls to the position of the given URL fragment (which includes the "#").
+      const elementID = fragment.replace(".", "\\.");
+      if (elementID !== "") {
+        const element = document.querySelector(elementID);
+        if (element !== null) {
+          scrollToElement(element);
+        }
+      }
+    }
+
+    $(document).ready(() => {
+      scrollToFragment(window.location.hash);
+      window.addEventListener("popstate", (_) => scrollToFragment(document.location.hash), false);
+    });
+  </script>
+
+  <!-- Hide the rendering of :orphan: metadata. -->
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const elements = document.getElementsByClassName("field-odd");
+      for (const element of elements) {
+          if (element.innerHTML.trim() === "orphan") {
+            element.style.display = "none";
+          }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    jQuery.noConflict(true);
+  </script>
+
+  
+
+<footer class="page-footer text-md-left pt-4">
+
+  <hr class="pb-0 mb-0">
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+
+      
+      <!-- About -->
+      <div class="col-md-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <p>        PennyLane is an open-source software framework for quantum
+        machine learning, quantum chemistry, and quantum computing, 
+        with the ability to run on all hardware.
+        Maintained with ❤️ by Xanadu.
+        </p>
+      </div>
+      
+
+      <!-- Links -->
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://pennylane.ai/">Home</a></li>
+          
+          <li><a href="https://pennylane.ai/qml">Learn</a></li>
+          
+          <li><a href="https://pennylane.ai/qml/demonstrations.html">Demonstrations</a></li>
+          
+          <li><a href="https://docs.pennylane.ai/">Documentation</a></li>
+          
+          <li><a href="https://github.com/PennyLaneAI/pennylane">GitHub</a></li>
+          
+          <li><a href="https://twitter.com/pennylaneai">Twitter</a></li>
+          
+          <li><a href="https://pennylane.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">Xanadu</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://xanadu.ai/">Home</a></li>
+          
+          <li><a href="https://xanadu.ai/about/">About</a></li>
+          
+          <li><a href="https://xanadu.ai/photonics">Hardware</a></li>
+          
+          <li><a href="https://xanadu.ai/careers/">Careers</a></li>
+          
+          <li><a href="https://cloud.xanadu.ai">Cloud</a></li>
+          
+          <li><a href="https://discuss.pennylane.ai/">Forum</a></li>
+          
+          <li><a href="https://xanadu.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+  <hr>
+
+  <!-- Social -->
+  <div class="social-section text-center">
+      <ul class="list-unstyled list-inline mb-0">
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://twitter.com/PennyLaneAI"><i class="fab fa-twitter"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://github.com/PennyLaneAI/pennylane"><i class="fab fa-github"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://linkedin.com/company/xanaduai/"><i class="fab fa-linkedin-in"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://discuss.pennylane.ai"><i class="fab fa-discourse"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://xanadu-quantum.slack.com/join/shared_invite/zt-nkwn25v9-H4hituCb_PUj4idG0MhSug#/shared-invite/email"><i class="fab fa-slack"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://pennylane.ai/blog/"><i class="fas fa-rss"> </i></a></li>
+          
+      </ul>
+      
+        
+          <a href="https://xanadu.us17.list-manage.com/subscribe?u=725f07a1d1a4337416c3129fd&id=294b062630" style="font-size: initial;">
+            Stay updated with our newsletter
+          </a>
+        
+      
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-3 mt-0 text-center">
+      <div class="container-fluid">
+            Copyright &copy; 2022, Xanadu Quantum Technologies, Inc.
+
+        
+          <br>
+          TensorFlow, the TensorFlow logo, and any related marks are trademarks of Google Inc.
+        
+      </div>
+  </div>
+</footer>
+  </body>
+</html>

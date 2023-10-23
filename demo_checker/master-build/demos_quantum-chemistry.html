@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta content="Explore and master quantum algorithms for quantum chemistry." property="og:description" />
+<meta content="https://pennylane.ai/qml/_static/demos_card.png" property="og:image" />
+
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="_static/favicon.ico">
+  
+
+
+  <meta property="og:title" content="Quantum Chemistry &#8212; PennyLane">
+  <meta property="og:url" content="https://pennylane.ai/qml/demos_quantum-chemistry.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  
+  
+  <meta content="Explore and master quantum algorithms for quantum chemistry." property="og:description" />
+  
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.14/css/mdb.min.css">
+  <!-- NanoScroller -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/css/nanoscroller.min.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/tomorrow-night.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       "HTML-CSS": { scale: 90, linebreaks: { automatic: true } },
+       TeX: {
+         Macros: {
+           pr : ['|\#1\\rangle\\langle\#1|',1],
+           ket: ['\\left| \#1\\right\\rangle',1],
+           bra: ['\\left\\langle \#1\\right|',1],
+           xket: ['\\left| \#1\\right\\rangle_x',1],
+           xbra: ['\\left\\langle \#1\\right|_x',1],
+           braket: ['\\langle \#1 \\rangle',1],
+           braketD: ['\\langle \#1 \\mid \#2 \\rangle',2],
+           braketT: ['\\langle \#1 \\mid \#2 \\mid \#3 \\rangle',3],
+           ketbra: ['| #1 \\rangle \\langle #2 |',2],
+           hc: ['\\text{h.c.}',0],
+           cc: ['\\text{c.c.}',0],
+           h: ['\\hat',0],
+           nn: ['\\nonumber',0],
+           di: ['\\frac{d}{d \#1}',1],
+           uu: ['\\mathcal{U}',0],
+           inn: ['\\text{in}',0],
+           out: ['\\text{out}',0],
+           vac: ['\\text{vac}',0],
+           I: ['\\hat{\\mathbf{1}}',0],
+           x: ['\\hat{x}',0],
+           p: ['\\hat{p}',0],
+           a: ['\\hat{a}',0],
+           ad: ['\\hat{a}^\\dagger',0],
+           n: ['\\hat{n}',0],
+           nbar: ['\\overline{n}',0],
+           sech: ['\\mathrm{sech~}',0],
+           tanh: ['\\mathrm{tanh~}',0],
+           re: ['\\text{Re}',0],
+           im: ['\\text{Im}',0],
+           tr: ['\\mathrm{Tr} #1',1],
+           sign: ['\\text{sign}',0],
+           overlr: ['\\overset\\leftrightarrow{\#1}',1],
+           overl: ['\\overset\leftarrow{\#1}',1],
+           overr: ['\\overset\rightarrow{\#1}',1],
+           avg: ['\\left< \#1 \\right>',1],
+           slashed: ['\\cancel{\#1}',1],
+           bold: ['\\boldsymbol{\#1}',1],
+           d: ['\\mathrm d',0],
+           expect: ["\\langle #1 \\rangle",1],
+           pde: ["\\frac{\\partial}{\\partial \#1}",1],
+           R: ["\\mathbb{R}",0],
+           C: ["\\mathbb{C}",0],
+           Ad: ["\\text{Ad}",0],
+           Var: ["\\text{Var}",0],
+           bx: ["\\mathbf{x}", 0],
+           bm: ["\\boldsymbol{\#1}",1],
+           haf: ["\\mathrm{haf}",0],
+           lhaf: ["\\mathrm{lhaf}",0]
+         }
+       }
+     });
+     </script>
+
+  <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130507810-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130507810-1');
+      </script>
+  
+    <title>Quantum Chemistry &#8212; PennyLane  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/xanadu.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/light-slider.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/hubs.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="canonical" href="https://pennylane.ai/qml/demos_quantum-chemistry.html" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Building molecular Hamiltonians" href="demos/tutorial_quantum_chemistry.html" />
+    <link rel="prev" title="QSVT in Practice" href="demos/tutorial_apply_qsvt.html" /> 
+  </head><body><nav class="navbar navbar-expand-lg navbar-light white sticky-top">
+
+<!-- Logo and Title -->
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <a class="navbar-brand nav-link" href="https://pennylane.ai">
+    
+  <img class="pr-1" src=" _static/logo.png" width="28px"></img>
+  
+    <img id="navbar-wordmark" src="_static/pennylane.svg"></img>
+  
+  </a>
+
+
+  <!-- [Mobile] Collapse Button -->
+  <div class="row right">
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <!-- [Mobile] Collapsible Content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+
+    <!-- Links on the Left -->
+    <ul class="navbar-nav mr-auto">
+      
+        
+          
+            <li class="nav-item active">
+              <a class="nav-link" href="https://pennylane.ai/qml/">
+                
+  
+    Learn
+  
+
+              </a>
+              <span class="sr-only">(current)</span>
+            </li>
+          
+
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/qml/demonstrations.html">
+                
+  
+    Demos
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/install.html">
+                
+  
+    Install
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/plugins.html">
+                
+  
+    Plugins
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://docs.pennylane.ai">
+                
+  
+    Documentation
+  
+
+            </a>
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://pennylane.ai/blog/">
+                
+  
+    Blog
+  
+
+            </a>
+          </li>
+        
+      
+    </ul>
+
+    <!-- Links on the Right -->
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://pennylane.ai/faq.html">
+            <i class="fas fa-question pr-1"></i> FAQ
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://discuss.pennylane.ai/">
+            <i class="fab fa-discourse pr-1"></i> Support
+          </a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/PennyLaneAI/pennylane">
+            <i class="fab fa-github pr-1"></i> GitHub
+          </a>
+        </li>
+      
+
+    </ul>
+  </div>
+
+</nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="demos/tutorial_quantum_chemistry.html" title="Building molecular Hamiltonians"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="demos/tutorial_apply_qsvt.html" title="QSVT in Practice"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="demonstrations.html" accesskey="U">Demos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Quantum Chemistry</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+        <div id="content">
+          <div id="right-column">
+            
+            
+
+            <div class="document clearer body">
+              
+    <div class="section" id="quantum-chemistry">
+<h1>Quantum Chemistry<a class="headerlink" href="#quantum-chemistry" title="Permalink to this headline">¶</a></h1>
+<p>Quantum chemistry is one of the leading application areas of quantum computers. Master the use of PennyLane to construct molecular Hamiltonians, design quantum circuits for quantum chemistry, and simulate properties of molecules and materials.</p>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet"><p><span class="html"><div class="gallery-grid row"></span></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Explore quantum chemistry in PennyLane.'><div class="figure align-default" id="id1">
+<img alt="_images/water_structure1.png" src="_images/water_structure1.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_quantum_chemistry.html"><span class="doc">Building molecular Hamiltonians</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='autograd chemistry' tooltip='Find the ground state of a Hamiltonian.'><div class="figure align-default" id="id2">
+<img alt="_images/pes_h2.png" src="_images/pes_h2.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_vqe.html"><span class="doc">A brief overview of VQE</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Discover the building blocks of quantum circuits for quantum chemistry'><div class="figure align-default" id="id3">
+<img alt="_images/Givens_rotations.png" src="_images/Givens_rotations.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_givens_rotations.html"><span class="doc">Givens rotations for quantum chemistry</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Differentiable Hartree-Fock Solver.'><div class="figure align-default" id="id4">
+<img alt="_images/h2.png" src="_images/h2.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_differentiable_HF.html"><span class="doc">Differentiable Hartree-Fock</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Adaptive circuits for quantum chemistry.'><div class="figure align-default" id="id5">
+<img alt="_images/thumbnail_adaptive_circuits.png" src="_images/thumbnail_adaptive_circuits.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_adaptive_circuits.html"><span class="doc">Adaptive circuits for quantum chemistry</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" tooltip='Study chemical reactions using VQE.'><div class="figure align-default" id="id6">
+<img alt="_images/reaction1.png" src="_images/reaction1.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_chemical_reactions.html"><span class="doc">Modelling chemical reactions on a quantum computer</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Optimizing the geometry of molecules.'><div class="figure align-default" id="id7">
+<img alt="_images/fig_thumbnail.png" src="_images/fig_thumbnail.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_mol_geo_opt.html"><span class="doc">Optimization of molecular geometries</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='VQE in different spin sectors'><div class="figure align-default" id="id8">
+<img alt="_images/thumbnail_spectra_h2.png" src="_images/thumbnail_spectra_h2.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_vqe_spin_sectors.html"><span class="doc">VQE in different spin sectors</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Optimize and reduce the number of measurements required to evaluate a variational algorithm cost function.'><div class="figure align-default" id="id9">
+<img alt="_images/meas_optimize_thumbnail.png" src="_images/meas_optimize_thumbnail.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_measurement_optimize.html"><span class="doc">Measurement optimization</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Evaluate the potential energy surface of H2 with parallel QPUs'><div class="figure align-default" id="id10">
+<img alt="_images/vqe_diagram1.png" src="_images/vqe_diagram1.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/vqe_parallel.html"><span class="doc">VQE with parallel QPUs with Rigetti</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Qubit tapering with symmetries'><div class="figure align-default" id="id11">
+<img alt="_images/qubit_tapering.png" src="_images/qubit_tapering.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_qubit_tapering.html"><span class="doc">Qubit tapering</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Classically-boosted Variational Quantum Eigensolver'><div class="figure align-default" id="id12">
+<img alt="_images/CB_VQE1.png" src="_images/CB_VQE1.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_classically_boosted_vqe.html"><span class="doc">Classically-boosted variational quantum eigensolver</span></a></span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Quantum Resource Estimation.'><div class="figure align-default" id="id13">
+<img alt="_images/resource_estimation.jpeg" src="_images/resource_estimation.jpeg" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_resource_estimation.html"><span class="doc">Resource estimation for quantum chemistry</span></a></span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Using PennyLane with PySCF and OpenFermion'><div class="figure align-default" id="id14">
+<img alt="_images/thumbnail_tutorial_external_libs.png" src="_images/thumbnail_tutorial_external_libs.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_qchem_external.html"><span class="doc">Using PennyLane with PySCF and OpenFermion</span></a></span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><div class="gallery-item-thumbcontainer" data-category='chemistry' tooltip='Fermionic Operators'><div class="figure align-default" id="id15">
+<img alt="_images/thumbnail_tutorial_fermionic_operators.png" src="_images/thumbnail_tutorial_fermionic_operators.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="demos/tutorial_fermionic_operators.html"><span class="doc">Fermionic operators</span></a></span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+</div></p>
+<p><span class="html"></div></div><div style='clear:both'></span></p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+    <script type="text/javascript">
+        // This script ensures that the active navbar entry switches
+        // from 'QML' to 'Demos' for any webpage within the demos/ directory,
+        // or for any of the demonstration landing pages
+        // (e.g., demos_optimization).
+        var pagename = document.location.href.match(/[^\/]+$/)[0];
+        var dir = document.URL.substr(0,document.URL.lastIndexOf('/')).match(/[^\/]+$/)[0];
+
+        if (pagename.includes("demos") || pagename.includes("demonstrations") || dir.includes("demos")) {
+
+            $(".nav-item.active").removeClass("active");
+            var demos_link = $('.navbar-nav a').filter(function(index) { return $(this).text() === "Demos"; })[0]
+            $(demos_link).parent().addClass("active");
+        }
+    </script>
+
+              <div id="bottom-dl" class="xanadu-call-to-action-links">
+                <div id="tutorial-type">demos_quantum-chemistry</div>
+                <div class="download-python-link">
+                  <i class="fab fa-python"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Python script</div>
+                </div>
+                <div class="download-notebook-link">
+                  <i class="fas fa-download"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">Download Notebook</div>
+                </div>
+                <div class="github-view-link">
+                  <i class="fab fa-github"></i>&nbsp;
+                  <div class="call-to-action-desktop-view">View on GitHub</div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        <div class="localtoc-container nano has-scrollbar">
+  <div class="nano-content">
+    <div id="localtoc">
+      <div>
+        <input name="q" type="text" class="form-control" placeholder="Search..." id="tutorialDemoSearchInput">
+      </div>
+      <h3>Filters</h3>
+      <div class="tags">
+        <input type="radio" class="controls" id="all" name="categories" value="all" checked>
+        <input type="radio" class="controls" id="chemistry" name="categories" value="chemistry">
+        <input type="radio" class="controls" id="photonics" name="categories" value="photonics">
+        <input type="radio" class="controls" id="tensorflow" name="categories" value="tensorflow">
+        <input type="radio" class="controls" id="pytorch" name="categories" value="pytorch">
+        <input type="radio" class="controls" id="autograd" name="categories" value="autograd">
+        <input type="radio" class="controls" id="rigetti" name="categories" value="rigetti">
+        <input type="radio" class="controls" id="cirq" name="categories" value="cirq">
+        <input type="radio" class="controls" id="qiskit" name="categories" value="qiskit">
+        <input type="radio" class="controls" id="braket" name="categories" value="braket">
+        <input type="radio" class="controls" id="strawberryfields" name="categories" value="strawberryfields">
+        <ol class="filters">
+          <li><label for="all">all</label></li>
+          <li><label for="chemistry">quantum chemistry</label></li>
+          <li><label for="photonics">quantum photonics</label></li>
+          <li><label for="tensorflow">TensorFlow</label></li>
+          <li><label for="pytorch">PyTorch</label></li>
+          <li><label for="autograd">NumPy/Autograd</label></li>
+
+          <li><label for="rigetti">Rigetti</label></li>
+          <li><label for="cirq">Cirq</label></li>
+          <li><label for="qiskit">Qiskit</label></li>
+          <li><label for="braket">Amazon Braket</label></li>
+          <li><label for="strawberryfields">Strawberry Fields</label></li>
+        </ol>
+      </div>
+  </div>
+</div>
+
+<style>
+    .localtoc-container {
+        opacity: 1;
+    }
+    #tutorialDemoSearchInput {
+      width: 64%;
+    }
+</style>
+
+<script type="text/javascript">
+function searchGalleryItems($galleryItems, searchQuery) {
+    $galleryItems.each(function(index, item) {
+        var $item = $(item);
+        var tooltipText = $item.attr("tooltip").toLowerCase();
+        var categoryText = $item.attr("data-category").toLowerCase();
+        var descriptionText = $item.find("span.doc").text().toLowerCase();
+        var itemText = categoryText + ' ' + tooltipText + ' ' + descriptionText;
+
+        if (!itemText.includes(searchQuery)) {
+            $item.addClass('d-none');
+        }
+
+        if (itemText.includes(searchQuery) && $item.hasClass('d-none')) {
+            $item.removeClass('d-none');
+        }
+    });
+}
+
+function toggle_filters() {
+    var val = $(".tags input[type='radio']:checked").val();
+    var searchQuery = $("#tutorialDemoSearchInput").val();
+    $(".filters label[for="+  val  +"]").addClass("active");
+    $(".filters label:not([for="+  val  +"])").removeClass("active");
+
+    if (val !== "all") {
+        if (searchQuery.length) {
+            searchGalleryItems($(".gallery-grid .gallery-item-thumbcontainer"), searchQuery);
+            $(".gallery-grid .gallery-item-thumbcontainer").each(function(index, item) {
+                var $item = $(item);
+                if (!$item.hasClass('d-none') && !$item.attr('data-category').includes(val)) {
+                    $item.addClass('d-none');
+                }
+            });
+        } else {
+            $(".gallery-grid .gallery-item-thumbcontainer:not([data-category~="+ val +"])").addClass('d-none');
+            $(".gallery-grid .gallery-item-thumbcontainer[data-category~="+ val +"]").removeClass('d-none');
+        }
+    } else {
+        if (searchQuery.length) {
+            searchGalleryItems($(".gallery-grid .gallery-item-thumbcontainer"), searchQuery);
+        } else {
+            $(".gallery-grid .gallery-item-thumbcontainer").removeClass('d-none');
+        }
+    }
+}
+
+toggle_filters();
+
+$(".tags input").on("change", function() {
+    toggle_filters();
+});
+
+$("#tutorialDemoSearchInput").on("keyup", function(e) {
+    e.preventDefault();
+    var searchQuery = e.target.value.toLowerCase();
+    var $galleryItems = $(".gallery-grid .gallery-item-thumbcontainer");
+
+    if (!searchQuery.length) {
+        $galleryItems.each(function(index, item) {
+            if ($(item).hasClass('d-none')) { $(item).removeClass('d-none'); }
+        });
+    } else {
+        searchGalleryItems($galleryItems, searchQuery);
+    }
+
+    toggle_filters();
+});
+</script>
+    
+          <div class="up-button">
+            
+              
+                <a href="demonstrations.html"><i class="fas fa-angle-double-left"></i></a>
+              
+            
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="demos/tutorial_quantum_chemistry.html" title="Building molecular Hamiltonians"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="demos/tutorial_apply_qsvt.html" title="QSVT in Practice"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PennyLane  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="demonstrations.html" >Demos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Quantum Chemistry</a></li> 
+      </ul>
+    </div>
+  <script type="text/javascript">
+    $("#mobile-toggle").click(function () {
+      $("#left-column").slideToggle("slow");
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- MathJax -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+  <!-- NanoScroller -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+  <!-- Syntax Highlighting -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript">
+    $("a.reference.internal").each(function(){
+      var link = $(this).attr("href");
+
+      var hash = link.split("#")[1];
+      var page = link.split("#")[0].split("/").slice(-1)[0].replace(".html", "");
+
+      if (hash == page) {
+        $(this).attr("href", link.split("#")[0]);
+      }
+    });
+
+    $(".document > .section").removeClass("section");
+    $("h1 ~ .section").removeClass("section");
+    $(".localtoc-container .nano-content").css("height", $("#content").height());
+    $(".localtoc-container").css("height", $("#content").height());
+    $(".nano").nanoScroller();
+  </script>
+
+  <script type="text/javascript">
+      $(window).scroll(function(){
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < 342) {
+          $(".localtoc-container").css("height", "calc(100% - " + (342 - scrollBottom) + "px)");
+          $(".localtoc-container .nano-content").css("height", "calc(100% - 119px)");
+        }
+      });
+  </script>
+
+  <script type="text/javascript">
+    if ($(".current").length) {
+      var target = $(".current")[0]
+      var rect = target.getBoundingClientRect();
+      if (rect.bottom > window.innerHeight) {
+          $(".nano").nanoScroller({ scrollTo: $(".current") });
+      } else {
+          $(".nano").nanoScroller({ scrollTop: 0 });
+      }
+    }
+    $(document).ready(function () {
+        $(".css-transitions-only-after-page-load").each(function (index, element) {
+            setTimeout(function () { $(element).removeClass("css-transitions-only-after-page-load") }, 10);
+        });
+        if (window.location.hash) {
+          var target = $("[id='" + window.location.hash.substr(1) + "']");
+          if (target.closest(".collapse").length) {
+            target.closest(".collapse").addClass("show");
+            target.closest(".collapse").prev().find(".rotate").addClass("up");
+          }
+        }
+    });
+  </script>
+
+    <script type="text/javascript">
+    var downloadNote = $(".sphx-glr-download-link-note.admonition.note");
+    if (downloadNote.length >= 1) {
+      var tutorialUrlArray = $("#tutorial-type").text().split('/');
+
+      if (tutorialUrlArray[0] == "demos") {
+        tutorialUrlArray[0] = "demonstrations";
+      }
+
+      var githubLink = "https://github.com/" + "PennyLaneAI/qml" + "/blob/master/" + tutorialUrlArray.join("/") + ".py",
+          pythonLink = $(".sphx-glr-download .reference.download")[0].href,
+          notebookLink = $(".sphx-glr-download .reference.download")[1].href;
+
+      $(".download-python-link").wrap("<a href=" + pythonLink + " data-behavior='call-to-action-event' data-response='Download Python script' download target='_blank'/>");
+      $(".download-notebook-link").wrap("<a href=" + notebookLink + " data-behavior='call-to-action-event' data-response='Download Notebook' download target='_blank'/>");
+      $(".github-view-link").wrap("<a href=" + githubLink + " data-behavior='call-to-action-event' data-response='View on Github' target='_blank'/>");
+      $("#right-column").addClass("page-shadow");
+    } else {
+      $(".xanadu-call-to-action-links").hide();
+      $("#bottom-dl").attr('style','display: none !important');
+    }
+    </script>
+
+    <script type="text/javascript">
+      function makeUL(urls, text) {
+          var list = document.createElement('ul');
+
+          for (var i = 0; i < urls.length; i++) {
+              var item = document.createElement('li');
+              var a = document.createElement('a');
+              var linkText = document.createTextNode(text[i]);
+              a.appendChild(linkText);
+              a.href = urls[i];
+              item.appendChild(a);
+              list.appendChild(item);
+          }
+          return list;
+      }
+
+      if (typeof related_tutorials !== 'undefined') {
+          document.getElementById('related-tutorials').appendChild(makeUL(related_tutorials, related_tutorials_titles));
+          $("#related-tutorials ul li a").append(' <i class="fas fa-angle-double-right" style="font-size: smaller;"></i>')
+          $("#related-tutorials").show();
+
+    } else {
+          $("#related-tutorials").hide();
+    }
+    </script>
+
+  <!-- Account for MathJax when navigating to anchor tags. -->
+  <script type="text/javascript">
+    function scrollToElement(e) {
+      // Scrolls to the given element, taking into account the navbar.
+      MathJax.Hub.Queue(function() {
+        // The following MUST be done asynchronously to take effect.
+        setTimeout(function() {
+          const navbar = document.querySelector("nav.navbar");
+          const navbarHeight = navbar ? navbar.offsetHeight : 0;
+          const scrollToY = e.offsetTop + e.offsetParent.offsetTop - navbarHeight;
+          window.scrollTo(0, scrollToY);
+        }, 0);
+      });
+    }
+
+    function scrollToFragment(fragment) {
+      // Scrolls to the position of the given URL fragment (which includes the "#").
+      const elementID = fragment.replace(".", "\\.");
+      if (elementID !== "") {
+        const element = document.querySelector(elementID);
+        if (element !== null) {
+          scrollToElement(element);
+        }
+      }
+    }
+
+    $(document).ready(() => {
+      scrollToFragment(window.location.hash);
+      window.addEventListener("popstate", (_) => scrollToFragment(document.location.hash), false);
+    });
+  </script>
+
+  <!-- Hide the rendering of :orphan: metadata. -->
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const elements = document.getElementsByClassName("field-odd");
+      for (const element of elements) {
+          if (element.innerHTML.trim() === "orphan") {
+            element.style.display = "none";
+          }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    jQuery.noConflict(true);
+  </script>
+
+  
+
+<footer class="page-footer text-md-left pt-4">
+
+  <hr class="pb-0 mb-0">
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+
+      
+      <!-- About -->
+      <div class="col-md-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <p>        PennyLane is an open-source software framework for quantum
+        machine learning, quantum chemistry, and quantum computing, 
+        with the ability to run on all hardware.
+        Maintained with ❤️ by Xanadu.
+        </p>
+      </div>
+      
+
+      <!-- Links -->
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">PennyLane</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://pennylane.ai/">Home</a></li>
+          
+          <li><a href="https://pennylane.ai/qml">Learn</a></li>
+          
+          <li><a href="https://pennylane.ai/qml/demonstrations.html">Demonstrations</a></li>
+          
+          <li><a href="https://docs.pennylane.ai/">Documentation</a></li>
+          
+          <li><a href="https://github.com/PennyLaneAI/pennylane">GitHub</a></li>
+          
+          <li><a href="https://twitter.com/pennylaneai">Twitter</a></li>
+          
+          <li><a href="https://pennylane.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="col-md-2 col-4">
+        <h5 class="mb-1 footer-heading">Xanadu</h5>
+        <hr width=100px class="d-inline-block mt-0 mb-1 accent-4">
+        <ul class="list-unstyled">
+          
+          <li><a href="https://xanadu.ai/">Home</a></li>
+          
+          <li><a href="https://xanadu.ai/about/">About</a></li>
+          
+          <li><a href="https://xanadu.ai/photonics">Hardware</a></li>
+          
+          <li><a href="https://xanadu.ai/careers/">Careers</a></li>
+          
+          <li><a href="https://cloud.xanadu.ai">Cloud</a></li>
+          
+          <li><a href="https://discuss.pennylane.ai/">Forum</a></li>
+          
+          <li><a href="https://xanadu.ai/blog">Blog</a></li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+  <hr>
+
+  <!-- Social -->
+  <div class="social-section text-center">
+      <ul class="list-unstyled list-inline mb-0">
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://twitter.com/PennyLaneAI"><i class="fab fa-twitter"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://github.com/PennyLaneAI/pennylane"><i class="fab fa-github"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://linkedin.com/company/xanaduai/"><i class="fab fa-linkedin-in"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://discuss.pennylane.ai"><i class="fab fa-discourse"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://xanadu-quantum.slack.com/join/shared_invite/zt-nkwn25v9-H4hituCb_PUj4idG0MhSug#/shared-invite/email"><i class="fab fa-slack"> </i></a></li>
+          
+          <li class="list-inline-item"><a class="btn-git" href="https://pennylane.ai/blog/"><i class="fas fa-rss"> </i></a></li>
+          
+      </ul>
+      
+        
+          <a href="https://xanadu.us17.list-manage.com/subscribe?u=725f07a1d1a4337416c3129fd&id=294b062630" style="font-size: initial;">
+            Stay updated with our newsletter
+          </a>
+        
+      
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-3 mt-0 text-center">
+      <div class="container-fluid">
+            Copyright &copy; 2022, Xanadu Quantum Technologies, Inc.
+
+        
+          <br>
+          TensorFlow, the TensorFlow logo, and any related marks are trademarks of Google Inc.
+        
+      </div>
+  </div>
+</footer>
+  </body>
+</html>
